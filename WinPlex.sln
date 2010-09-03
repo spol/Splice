@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPlexManager", "WinPlexManager\WinPlexManager.csproj", "{82CB1BEC-89D7-47AA-A72E-BA17944229C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPlexServerService", "WinPlexServerService\WinPlexServerService.csproj", "{064A37E0-88E9-4B59-9064-3C587792B595}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPlexServerConsole", "WinPlexServerConsole\WinPlexServerConsole.csproj", "{D26F7702-A859-4BF4-9365-B86C8E3D63BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPlexServerLib", "WinPlexServerLib\WinPlexServerLib.csproj", "{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82CB1BEC-89D7-47AA-A72E-BA17944229C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82CB1BEC-89D7-47AA-A72E-BA17944229C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82CB1BEC-89D7-47AA-A72E-BA17944229C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82CB1BEC-89D7-47AA-A72E-BA17944229C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064A37E0-88E9-4B59-9064-3C587792B595}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064A37E0-88E9-4B59-9064-3C587792B595}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064A37E0-88E9-4B59-9064-3C587792B595}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064A37E0-88E9-4B59-9064-3C587792B595}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26F7702-A859-4BF4-9365-B86C8E3D63BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26F7702-A859-4BF4-9365-B86C8E3D63BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26F7702-A859-4BF4-9365-B86C8E3D63BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26F7702-A859-4BF4-9365-B86C8E3D63BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
