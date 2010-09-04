@@ -1,0 +1,10 @@
+
+/WinPlexServerConsole/bin
+/WinPlexServerConsole/obj
+/WinPlexManager/bin
+/WinPlexManager/obj
+/WinPlexServerLib/bin
+/WinPlexServerLib/obj
+/WinPlexServerService/bin
+/WinPlexServerService/obj
+*.suo
