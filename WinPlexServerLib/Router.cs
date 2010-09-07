@@ -9,55 +9,53 @@ namespace WinPlexServer
 {
     public class Router
     {
-        Dictionary<string, Section> Sections = new Dictionary<string,Section>();
+        Dictionary<string, IController> Controllers = new Dictionary<string,IController>();
 
         public void IncomingRequest(object sender, HttpRequestEventArgs e)
         {
-            Uri Url = e.RequestContext.Request.Url;
-            string path = e.RequestContext.Request.Url.AbsolutePath;
-
-            if (!path.EndsWith("/"))
-            {
-                path = path += "/";
-            }
-            
-            //e.RequestContext.Request.QueryString;
             HttpListenerResponse response = e.RequestContext.Response;
-            response.ContentEncoding = Encoding.UTF8;
-            if (path == "/")
+            HttpListenerRequest httpRequest = e.RequestContext.Request;
+            PlexRequest request = new PlexRequest(httpRequest);
+
+            string path = request.AbsolutePath;
+
+            if (request.IsRoot)
             {
                 RootIndex(response);
             }
             else
             {
-                string section = path.Split('/')[1];
-                if (Sections.Keys.Contains(section))
+                string controller = path.Split('/')[1];
+                if (Controllers.Keys.Contains(controller))
                 {
-                    path = path.Substring(section.Length + 1);
-                    Sections[section].HandleRequest(response, path);
+                    Controllers[controller].HandleRequest(request, response);
+                }
+                else
+                {
+                    // TODO: 404;
                 }
             }
             response.Close();
         }
 
-        public void AddSection(string key, Section section)
+        public void AddController(string key, IController section)
         {
-            Sections.Add(key, section);
+            Controllers.Add(key, section);
         }
 
         public void RootIndex(HttpListenerResponse response)
         {
             XmlDocument xml = new XmlDocument();
             XmlElement root = xml.CreateElement("MediaContainer");
-            root.SetAttribute("size", Sections.Count.ToString());
+            root.SetAttribute("size", Controllers.Count.ToString());
             xml.AppendChild(root);
 
-            foreach (KeyValuePair<string, Section> section in Sections)
+            foreach (KeyValuePair<string, IController> controller in Controllers)
             {
                 XmlElement directory = xml.CreateElement("Directory");
                 directory.SetAttribute("count", "1");
-                directory.SetAttribute("key", section.Key);
-                directory.SetAttribute("title", section.Key);
+                directory.SetAttribute("key", controller.Key);
+                directory.SetAttribute("title", controller.Key);
                 root.AppendChild(directory);
             }
 
@@ -65,6 +63,8 @@ namespace WinPlexServer
             byte[] buffer = Encoding.UTF8.GetBytes(content);
             response.StatusCode = (int)HttpStatusCode.OK;
             response.StatusDescription = "OK";
+            response.ContentType = "text/xml";
+            response.ContentEncoding = Encoding.UTF8;
             response.ContentLength64 = buffer.Length;
             response.OutputStream.Write(buffer, 0, buffer.Length);
             response.OutputStream.Close();

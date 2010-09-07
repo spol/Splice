@@ -6,11 +6,8 @@ using System.Text;
 
 namespace WinPlexServer
 {
-    public class Section
+    public interface IController
     {
-        public virtual void HandleRequest(HttpListenerResponse response, string path)
-        {
-        }
+        void HandleRequest(PlexRequest request, HttpListenerResponse response);
     }
-
 }

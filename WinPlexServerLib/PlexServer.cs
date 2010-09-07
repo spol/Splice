@@ -13,7 +13,7 @@ namespace WinPlexServer
         public PlexServer(string ServerTestUrl)
         {
             Router router = new Router();
-            router.AddSection("library", new Library());
+            router.AddController("library", new Library());
             listener = new WebServer(new Uri(ServerTestUrl), router);
             listener.Start();
         }
