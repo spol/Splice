@@ -6,8 +6,8 @@ using System.Text;
 
 namespace WinPlexServer
 {
-    public interface IController
+    public abstract class PlexResponse
     {
-        PlexResponse HandleRequest(PlexRequest request);
+        public abstract void Send(HttpListenerResponse response);
     }
 }

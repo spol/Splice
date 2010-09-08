@@ -31,5 +31,26 @@ namespace WinPlexServer
 
             return collections;
         }
+
+        public static VideoCollection GetVideoCollection(int id)
+        {
+            SQLiteConnection conn = new SQLiteConnection("Data Source=data.db");
+            conn.Open();
+
+            using (SQLiteCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT * FROM collections WHERE id = " + id.ToString();
+                SQLiteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string collectionName = reader.GetString(reader.GetOrdinal("name"));
+                    int type = reader.GetInt32(reader.GetOrdinal("type"));
+                    return new VideoCollection(id, collectionName, type);
+                }
+            }
+
+            return null;
+        }
     }
 }

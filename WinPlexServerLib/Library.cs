@@ -9,34 +9,23 @@ namespace WinPlexServer
 {
     public class Library : IController
     {
-        public void HandleRequest(PlexRequest request, HttpListenerResponse response)
+        public PlexResponse HandleRequest(PlexRequest request)
         {
             if (request.PathSegments.Length == 1)
             {
-                Index(request, response);
+                return Index(request);
             }
-            else if (request.PathSegments.Length == 2 && request.PathSegments[1] == "sections")
+            else if (request.PathSegments.Length >= 2 && request.PathSegments[1] == "sections")
             {
-                SectionsIndex(request, response);
-            }
-            else if (request.PathSegments.Length == 3 && request.PathSegments[1] == "sections")
-            {
-                SectionListing(Convert.ToInt32(request.PathSegments[2]), request, response);
+                return Sections(request);
             }
             else
             {
-                string path = request.ControllerPath;
-                string content = ""; //path;
-                byte[] buffer = Encoding.UTF8.GetBytes(content);
-                response.StatusCode = (int)HttpStatusCode.OK;
-                response.StatusDescription = "OK";
-                response.ContentLength64 = buffer.Length;
-                response.OutputStream.Write(buffer, 0, buffer.Length);
-                response.OutputStream.Close();
+                return XmlResponse.NotFound();
             }
         }
 
-        public void Index(PlexRequest request, HttpListenerResponse response)
+        public PlexResponse Index(PlexRequest request)
         {
             XmlDocument xml = new XmlDocument();
             XmlElement root = xml.CreateElement("MediaContainer");
@@ -53,20 +42,41 @@ namespace WinPlexServer
             directory.SetAttribute("title", "Library Sections");
             root.AppendChild(directory);
 
-            XmlResponse xmlResponse = new XmlResponse(response);
+            XmlResponse xmlResponse = new XmlResponse();
             xmlResponse.XmlDoc = xml;
-            xmlResponse.Send();
-
+            return xmlResponse;
         }
 
-        public void SectionsIndex(PlexRequest request, HttpListenerResponse response)
+        public PlexResponse Sections(PlexRequest request)
+        {
+            if (request.PathSegments.Length == 2)
+            {
+                return SectionsIndex(request);
+            }
+            else if (request.PathSegments.Length == 3)
+            {
+                return SectionListing(Convert.ToInt32(request.PathSegments[2]), request);
+            }
+            else if (request.PathSegments.Length == 4)
+            {
+                int collectionId = Convert.ToInt32(request.PathSegments[2]);
+                string filterKey = request.PathSegments[3];
+                return FilteredSection(collectionId, filterKey);
+            }
+            else
+            {
+                return XmlResponse.NotFound();
+            }
+        }
+
+        public PlexResponse SectionsIndex(PlexRequest request)
         {
             XmlDocument xml = new XmlDocument();
             XmlDeclaration dec = xml.CreateXmlDeclaration("1.0", "UTF-8", null);
             xml.AppendChild(dec);
             XmlElement root = xml.CreateElement("MediaContainer");
             List<VideoCollection> collections = DataAccess.GetVideoCollections();
-            root.SetAttribute("size", collections.Count);
+            root.SetAttribute("size", collections.Count.ToString());
             xml.AppendChild(root);
 
             foreach (VideoCollection collection in collections)
@@ -79,20 +89,21 @@ namespace WinPlexServer
                 root.AppendChild(directory);
             }
 
-            XmlResponse xmlResponse = new XmlResponse(response);
+            XmlResponse xmlResponse = new XmlResponse();
             xmlResponse.XmlDoc = xml;
-            xmlResponse.Send();
+            return xmlResponse;
         }
 
-        public void SectionListing(int sectionId, PlexRequest request, HttpListenerResponse response)
+        public PlexResponse SectionListing(int sectionId, PlexRequest request)
         {
-            VideoCollection collection = DataAccess.GetCollection(sectionId);
+            VideoCollection collection = DataAccess.GetVideoCollection(sectionId);
+            List<Filter> filters = Filter.GetList();
             XmlDocument xml = new XmlDocument();
             XmlDeclaration dec = xml.CreateXmlDeclaration("1.0", "UTF-8", null);
             xml.AppendChild(dec);
             XmlElement root = xml.CreateElement("MediaContainer");
             //size="11" 
-            root.SetAttribute("size", "11");
+            root.SetAttribute("size", filters.Count.ToString());
             //content="secondary" 
             root.SetAttribute("content", "secondary");
             //mediaTagPrefix="/system/bundle/media/flags/" 
@@ -109,9 +120,26 @@ namespace WinPlexServer
             root.SetAttribute("art", "/:/resources/show-fanart.jpg");
             //identifier="com.plexapp.plugins.library"
             root.SetAttribute("identifier", "com.plexapps.plugins.library");
-            //title1="TV Shows" 
-            root.SetAttribute("title1", "11");
+            //title1="TV Shows"
+            root.SetAttribute("title1", collection.Name);
             xml.AppendChild(root);
+
+            foreach (Filter filter in filters)
+            {
+                XmlElement directory = xml.CreateElement("Directory");
+                directory.SetAttribute("key", filter.Key);
+                directory.SetAttribute("title", filter.Name);
+                root.AppendChild(directory);
+            }
+
+            XmlResponse xmlResponse = new XmlResponse();
+            xmlResponse.XmlDoc = xml;
+            return xmlResponse;
+        }
+
+        private PlexResponse FilteredSection(int collectionId, string filterKey)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -18,23 +18,25 @@ namespace WinPlexServer
             PlexRequest request = new PlexRequest(httpRequest);
 
             string path = request.AbsolutePath;
-
+            PlexResponse resp;
             if (request.IsRoot)
             {
-                RootIndex(response);
+                resp = RootIndex();
             }
             else
             {
                 string controller = path.Split('/')[1];
                 if (Controllers.Keys.Contains(controller))
                 {
-                    Controllers[controller].HandleRequest(request, response);
+                    resp = Controllers[controller].HandleRequest(request);
                 }
                 else
                 {
                     // TODO: 404;
+                    resp = XmlResponse.NotFound();
                 }
             }
+            resp.Send(response);
             response.Close();
         }
 
@@ -43,7 +45,7 @@ namespace WinPlexServer
             Controllers.Add(key, section);
         }
 
-        public void RootIndex(HttpListenerResponse response)
+        public PlexResponse RootIndex()
         {
             XmlDocument xml = new XmlDocument();
             XmlElement root = xml.CreateElement("MediaContainer");
@@ -59,16 +61,9 @@ namespace WinPlexServer
                 root.AppendChild(directory);
             }
 
-            string content = xml.OuterXml;
-            byte[] buffer = Encoding.UTF8.GetBytes(content);
-            response.StatusCode = (int)HttpStatusCode.OK;
-            response.StatusDescription = "OK";
-            response.ContentType = "text/xml";
-            response.ContentEncoding = Encoding.UTF8;
-            response.ContentLength64 = buffer.Length;
-            response.OutputStream.Write(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
-            
+            XmlResponse response = new XmlResponse();
+            response.XmlDoc = xml;
+            return response;          
         }
     }
 }

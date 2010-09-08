@@ -18,6 +18,7 @@ namespace WinPlexServerConsole
 
             Console.WriteLine("Done. Press any key to exit.");
             Console.ReadLine();
+
             
         }
     }

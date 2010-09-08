@@ -47,15 +47,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess.cs" />
+    <Compile Include="Filter.cs" />
+    <Compile Include="Filters\AllFilter.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="PlexRequest.cs" />
+    <Compile Include="PlexResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="PlexServer.cs" />
     <Compile Include="VideoCollection.cs" />
     <Compile Include="WebServer.cs" />
     <Compile Include="XmlResponse.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZeroconfService\ZeroconfService.csproj">
+      <Project>{AD5CF7A9-93C4-48DD-ACD8-38DD434F1491}</Project>
+      <Name>ZeroconfService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
