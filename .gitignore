@@ -7,4 +7,6 @@
 /WinPlexServerLib/obj
 /WinPlexServerService/bin
 /WinPlexServerService/obj
+/ZeroconfService/bin
+/ZeroconfService/obj
 *.suo
