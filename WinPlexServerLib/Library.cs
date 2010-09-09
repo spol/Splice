@@ -97,7 +97,7 @@ namespace WinPlexServer
         public PlexResponse SectionListing(int sectionId, PlexRequest request)
         {
             VideoCollection collection = DataAccess.GetVideoCollection(sectionId);
-            List<Filter> filters = Filter.GetList();
+            List<Filter> filters = Filter.GetTVFilterList();
             XmlDocument xml = new XmlDocument();
             XmlDeclaration dec = xml.CreateXmlDeclaration("1.0", "UTF-8", null);
             xml.AppendChild(dec);
@@ -139,7 +139,46 @@ namespace WinPlexServer
 
         private PlexResponse FilteredSection(int collectionId, string filterKey)
         {
-            throw new NotImplementedException();
+            VideoCollection currentCollection = DataAccess.GetVideoCollection(collectionId);
+
+            if (currentCollection.Type == "show")
+            {
+                Filter currentFilter = Filter.GetTVFilter(filterKey);
+
+                List<TVShow> shows = DataAccess.GetTVShows(collectionId, currentFilter);
+
+                XmlDocument xml = new XmlDocument();
+                XmlElement root = xml.CreateElement("MediaContainer");
+                //size="1"
+                root.SetAttribute("size", shows.Count.ToString());
+                //mediaTagPrefix="/system/bundle/media/flags/"
+                root.SetAttribute("mediaTagPrefix", "/system/bundle/media/flags/");
+                //mediaTagVersion="1283229604"
+                root.SetAttribute("mediaTagVersion", "1283229604");
+                //nocache="1"
+                root.SetAttribute("nocache", "1");
+                //viewGroup="show"
+                root.SetAttribute("viewGroup", "show");
+                //viewMode="65592"
+                root.SetAttribute("viewMode", "65592");
+                //art="/:/resources/show-fanart.jpg"
+                root.SetAttribute("art", "/:/resources/show-fanart.jpg");
+                //title1="TV Shows"
+                root.SetAttribute("title1", "TV Shows");
+                //identifier="com.plexapp.plugins.library"
+                root.SetAttribute("identifier", "com.plexapp.plugins.library");
+                xml.AppendChild(root);
+
+                XmlResponse resp = new XmlResponse();
+                resp.XmlDoc = xml;
+
+                return resp;
+            }
+            else
+            {
+                return new XmlResponse();
+            }
+            
         }
     }
 }

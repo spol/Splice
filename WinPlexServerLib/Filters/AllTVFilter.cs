@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WinPlexServer.Filters
 {
-    class AllFilter : Filter
+    class AllTVFilter : Filter
     {
         public override string Name
         {
@@ -15,6 +15,11 @@ namespace WinPlexServer.Filters
         public override string Key
         {
             get { return "all"; }
+        }
+
+        public override string Query
+        {
+            get { return @"SELECT * FROM tv_shows WHERE tv_show"; }
         }
     }
 }
