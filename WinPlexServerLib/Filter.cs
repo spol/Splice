@@ -8,22 +8,35 @@ namespace WinPlexServer
 {
     public abstract class Filter
     {
-        public abstract string Name
-        {
-            get;
+        private static List<Filter> tvFilters {
+            get {
+                List<Filter> filters = new List<Filter>();
+                filters.Add(new AllTVFilter());
+                return filters;
+            }
         }
 
-        public abstract string Key
+        public abstract string Name { get; }
+
+        public abstract string Key { get; }
+
+        public abstract string Query { get; }
+
+        public static List<Filter> GetTVFilterList()
         {
-            get;
+            return tvFilters;
         }
 
-        public static List<Filter> GetList()
+        public static Filter GetTVFilter(string key)
         {
-            List<Filter> filters = new List<Filter>();
-            filters.Add(new AllFilter());
-
-            return filters;
+            foreach (Filter filter in tvFilters)
+            {
+                if (filter.Key == key)
+                {
+                    return filter;
+                }
+            }
+            return null;
         }
     }
 }
