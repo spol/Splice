@@ -139,5 +139,29 @@ namespace WinPlexServer
 
             return seasons;
         }
+
+        public static List<TVShow> GetTVShows(int collectionId, Filter filter)
+        {
+            SQLiteConnection conn = new SQLiteConnection("Data Source=data.db");
+            conn.Open();
+            List<TVShow> shows = new List<TVShow>();
+
+            using (SQLiteCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = filter.Query;
+                SQLiteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string showName = reader.GetString(reader.GetOrdinal("showName"));
+                    int id = reader.GetInt32(reader.GetOrdinal("id"));
+                    int type = reader.GetInt32(reader.GetOrdinal("type"));
+                    TVShow show = new TVShow(id, showName);
+                    shows.Add(show);
+                }
+            }
+
+            return shows;
+        }
     }
 }
