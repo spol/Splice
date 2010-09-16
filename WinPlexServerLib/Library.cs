@@ -234,9 +234,76 @@ namespace WinPlexServer
             }
         }
 
-        private PlexResponse GetSeasonMetaDataChildren(int id)
+        private PlexResponse GetSeasonMetaDataChildren(int seasonId)
         {
- 	        throw new NotImplementedException();
+            TVSeason season = DataAccess.GetTVSeason(seasonId);
+            TVShow show = DataAccess.GetTVShow(season.ShowId);
+            List<TVEpisode> episodes = DataAccess.GetTVEpisodes(season);
+
+            XmlDocument doc = new XmlDocument();
+            XmlElement root = doc.CreateElement("MediaContainer");
+            root.SetAttribute("size", episodes.Count.ToString());
+            root.SetAttribute("grandparentContentRating", show.ContentRating);
+            root.SetAttribute("grandparentStudio", show.Studio);
+            root.SetAttribute("grandparentTitle", show.Title);
+            root.SetAttribute("mediaTagPrefix", "/system/bundle/media/flags/");
+            root.SetAttribute("mediaTagVersion", "1283229604");
+            root.SetAttribute("nocache", "1");
+            // Unsure about this one. Possibly position in order from previous level.
+            root.SetAttribute("parentIndex", "1");
+            root.SetAttribute("parentTitle", "");
+            root.SetAttribute("thumb", show.Thumb);
+            root.SetAttribute("viewGroup", "episode");
+            root.SetAttribute("viewMode", "65592");
+            root.SetAttribute("key", season.Id.ToString());
+            root.SetAttribute("banner", show.Banner);
+            root.SetAttribute("art", show.Art);
+            root.SetAttribute("title1", show.Title);
+            root.SetAttribute("title2", season.Title);
+            root.SetAttribute("identifier", "com.plexapp.plugins.library");
+            doc.AppendChild(root);
+
+            foreach (TVEpisode episode in episodes)
+            {
+                XmlElement el = doc.CreateElement("Video");
+
+                el.SetAttribute("ratingKey", episode.Id.ToString());
+                el.SetAttribute("key", String.Format("/library/metadata/{0}", episode.Id));
+                el.SetAttribute("type", episode.Type);
+                el.SetAttribute("title", episode.Title);
+                el.SetAttribute("summary", episode.Summary);
+                el.SetAttribute("index", episode.EpisodeNumber.ToString());
+                // TODO format rating to 1dp.
+                el.SetAttribute("rating", episode.Rating.ToString());
+                el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", episode.Id, episode.LastUpdated));
+                el.SetAttribute("duration", episode.Duration.ToString());
+                el.SetAttribute("originallyAvailableAt", episode.AirDate.ToShortDateString());
+
+                // TODO Add Media / Writer / Director tags.
+
+                XmlElement media = doc.CreateElement("Media");
+                media.SetAttribute("id", episode.VideoFile.Id.ToString());
+                media.SetAttribute("duration", episode.VideoFile.Duration.ToString());
+                media.SetAttribute("bitrate", episode.VideoFile.Bitrate.ToString());
+                media.SetAttribute("aspectRatio", episode.VideoFile.AspectRatio.ToString());
+                media.SetAttribute("audioChannels", episode.VideoFile.AudioChannels.ToString());
+                media.SetAttribute("audioCodec", episode.VideoFile.AudioCodec);
+                media.SetAttribute("videoCodec", episode.VideoFile.VideoCodec);
+                media.SetAttribute("videoResolution", episode.VideoFile.VideoResolution);
+                media.SetAttribute("videoFrameRate", episode.VideoFile.VideoFrameRate);
+
+                XmlElement part = doc.CreateElement("Part");
+                part.SetAttribute("key", String.Format("/library/parts/{0}", episode.VideoFile.Id));
+                part.SetAttribute("file", episode.VideoFile.Path);
+                part.SetAttribute("size", episode.VideoFile.Size.ToString());
+
+                media.AppendChild(part);
+                el.AppendChild(media);
+                root.AppendChild(el);
+            }
+            XmlResponse resp = new XmlResponse();
+            resp.XmlDoc = doc;
+            return resp;
         }
 
         private PlexResponse GetShowMetaDataChildren(int id)

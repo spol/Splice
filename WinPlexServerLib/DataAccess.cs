@@ -131,7 +131,7 @@ namespace WinPlexServer
             {
                 TVSeason season = new TVSeason();
                 season.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                season.Title = reader.GetString(reader.GetOrdinal("seasonName"));
+                season.Title = reader.GetString(reader.GetOrdinal("title"));
                 season.SeasonNumber = reader.GetInt32(reader.GetOrdinal("seasonNumber"));
 
                 seasons.Add(season);
@@ -140,28 +140,66 @@ namespace WinPlexServer
             return seasons;
         }
 
-        public static List<TVShow> GetTVShows(int collectionId, Filter filter)
+        internal static List<TVEpisode> GetTVEpisodes(TVSeason season)
         {
-            SQLiteConnection conn = new SQLiteConnection("Data Source=data.db");
-            conn.Open();
-            List<TVShow> shows = new List<TVShow>();
+            SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_episodes WHERE seasonId = " + season.Id.ToString());
 
-            using (SQLiteCommand cmd = conn.CreateCommand())
+            List<TVEpisode> episodes = new List<TVEpisode>();
+            while (reader.Read())
             {
-                cmd.CommandText = filter.Query;
-                SQLiteDataReader reader = cmd.ExecuteReader();
+                TVEpisode episode = new TVEpisode();
+                episode.Id = reader.GetInt32(reader.GetOrdinal("id"));
+                episode.Title = reader.GetString(reader.GetOrdinal("title"));
+                episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
+                episode.SeasonId = reader.GetInt32(reader.GetOrdinal("seasonId"));
+                episode.Rating = reader.GetFloat(reader.GetOrdinal("rating"));
+                episode.Summary = reader.GetString(reader.GetOrdinal("summary"));
+                //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
+                //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
+                //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
 
-                while (reader.Read())
-                {
-                    string showName = reader.GetString(reader.GetOrdinal("showName"));
-                    int id = reader.GetInt32(reader.GetOrdinal("id"));
-                    int type = reader.GetInt32(reader.GetOrdinal("type"));
-                    TVShow show = new TVShow(id, showName);
-                    shows.Add(show);
-                }
+                episode.VideoFile = DataAccess.GetVideoFile(episode.Id);
+
+                episodes.Add(episode);
             }
 
-            return shows;
+            return episodes;
+        }
+
+        internal static VideoFile GetVideoFile(int parentId)
+        {
+            SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE parentId = " + parentId.ToString());
+
+            VideoFile vid = new VideoFile();
+
+            reader.Read();
+
+            vid.AspectRatio = reader.GetFloat(reader.GetOrdinal("aspectRatio"));
+            vid.AudioChannels = reader.GetFloat(reader.GetOrdinal("audioChannels"));
+            vid.AudioCodec = reader.GetString(reader.GetOrdinal("audioCodec"));
+            vid.Bitrate = reader.GetInt32(reader.GetOrdinal("bitrate"));
+            vid.Duration = reader.GetInt32(reader.GetOrdinal("duration"));
+            vid.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            vid.VideoCodec = reader.GetString(reader.GetOrdinal("videoCodec"));
+            vid.VideoFrameRate = reader.GetString(reader.GetOrdinal("videoFrameRate"));
+            vid.VideoResolution = reader.GetString(reader.GetOrdinal("videoResolution"));
+            vid.Path = reader.GetString(reader.GetOrdinal("path"));
+            vid.Size = reader.GetInt32(reader.GetOrdinal("size"));
+
+            return vid;
+        }
+
+        internal static TVSeason GetTVSeason(int seasonId)
+        {
+            SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_seasons WHERE id = " + seasonId.ToString());
+            TVSeason season = new TVSeason();
+            reader.Read();
+            season.Id = seasonId;
+            season.Title = reader.GetString(reader.GetOrdinal("title"));
+            season.SeasonNumber = reader.GetInt32(reader.GetOrdinal("seasonNumber"));
+            season.ShowId = reader.GetInt32(reader.GetOrdinal("showId"));
+
+            return season;
         }
     }
 }
