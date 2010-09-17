@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -60,6 +61,14 @@ namespace WinPlexServer
             get
             {
                 return AbsolutePath.Substring(Controller.Length + 1);
+            }
+        }
+
+        public NameValueCollection Headers
+        {
+            get
+            {
+                return request.Headers;
             }
         }
 

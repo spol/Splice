@@ -390,6 +390,16 @@ namespace WinPlexServer
                 VideoResponse resp = new VideoResponse();
                 resp.FilePath = vidFile.Path;
 
+                if (request.Headers["Range"] != null)
+                {
+                    string[] range = request.Headers["Range"].Substring(6).Split('-');
+                    resp.Start = Convert.ToInt64(range[0]);
+                    if (range[1] != "")
+                    {
+                        resp.End = Convert.ToInt64(range[1]);
+                    }
+                }
+
                 return resp;
             }
         }

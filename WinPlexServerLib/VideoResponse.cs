@@ -11,6 +11,9 @@ namespace WinPlexServer
     {
         public string FilePath { get; set; }
 
+        public Int64 Start { get; set; }
+        public Nullable<Int64> End { get; set; }
+
         public override void Send(HttpListenerResponse response)
         {
             if (FilePath == null)
@@ -22,21 +25,39 @@ namespace WinPlexServer
             {
                 throw new Exception("File specifed for response does not exist.");
             }
-//            string content = _xml.OuterXml;
-//            byte[] buffer = Encoding.UTF8.GetBytes(content);
+
             response.ProtocolVersion = System.Net.HttpVersion.Version10;
             response.Headers.Add("X-Plex-Protocol", "1.0");
-            response.StatusCode = (int)HttpStatusCode.OK;
-            response.StatusDescription = "OK";
+            if (Start > 0 || End != null)
+            {
+                response.StatusCode = (int)HttpStatusCode.PartialContent;
+                response.StatusDescription = "Partial Content";
+            }
+            else
+            {
+                response.StatusCode = (int)HttpStatusCode.OK;
+                response.StatusDescription = "OK";
+            }
             response.ContentType = "application/octet-stream";
-            
-            response.ContentLength64 = info.Length;
+
+            Int64 length = info.Length;
+            length = length - Start;
+            response.ContentLength64 = length;
             FileStream fs = File.OpenRead(FilePath);
             byte[] buffer = new byte[1024];
             int bytesRead = 0;
+            int totalBytesRead = 0;
+            int totalBytesWritten = 0;
+            fs.Seek(Start, SeekOrigin.Begin);
+
+            BinaryWriter writer = new BinaryWriter(response.OutputStream);
             while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0) {
-                response.OutputStream.Write(buffer, 0, bytesRead);
+                totalBytesRead += bytesRead;
+                writer.Write(buffer);
+                totalBytesWritten += bytesRead;
             }
+            writer.Close();
+            response.OutputStream.Flush();
             response.OutputStream.Close();
         }
     }
