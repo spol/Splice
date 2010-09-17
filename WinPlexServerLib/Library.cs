@@ -23,6 +23,10 @@ namespace WinPlexServer
             {
                 return MetaData(request);
             }
+            else if (request.PathSegments.Length >= 2 && request.PathSegments[1] == "parts")
+            {
+                return Parts(request);
+            }
             else
             {
                 return XmlResponse.NotFound();
@@ -175,7 +179,24 @@ namespace WinPlexServer
 
                 foreach (TVShow show in shows)
                 {
-                    root.AppendChild(show.ToXml(xml));
+                    XmlElement el = xml.CreateElement("Directory");
+                    el.SetAttribute("ratingKey", show.Id.ToString());
+                    el.SetAttribute("key", String.Format("/library/metadata/{0}/children", show.Id));
+                    el.SetAttribute("studio", show.Studio);
+                    el.SetAttribute("type", show.Type);
+                    el.SetAttribute("title", show.Title);
+                    el.SetAttribute("contentRating", show.ContentRating);
+                    el.SetAttribute("summary", show.Summary);
+                    el.SetAttribute("rating", show.Rating.ToString());
+                    el.SetAttribute("year", show.Year.ToString());
+                    el.SetAttribute("thumb", show.Thumb);
+                    el.SetAttribute("art", show.Art);
+                    el.SetAttribute("banner", show.Banner);
+                    el.SetAttribute("duration", show.Duration.ToString());
+                    el.SetAttribute("originallyAvailableAt", show.OriginallyAvailableAt.ToShortDateString());
+                    el.SetAttribute("leafCount", show.LeafCount.ToString());
+                    el.SetAttribute("viewedLeafCount", show.ViewedLeafCount.ToString());
+                    root.AppendChild(el);
                 }
 
                 XmlResponse resp = new XmlResponse();
@@ -352,6 +373,25 @@ namespace WinPlexServer
             XmlResponse resp = new XmlResponse();
             resp.XmlDoc = doc;
             return resp;
+        }
+
+        private PlexResponse Parts(PlexRequest request)
+        {
+            if (request.PathSegments.Length < 3)
+            {
+                return XmlResponse.NotFound();
+            }
+            else
+            {
+                int PartId = Convert.ToInt32(request.PathSegments[2]);
+
+                VideoFile vidFile = DataAccess.GetVideoFile(PartId);
+
+                VideoResponse resp = new VideoResponse();
+                resp.FilePath = vidFile.Path;
+
+                return resp;
+            }
         }
 
     }

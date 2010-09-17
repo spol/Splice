@@ -47,6 +47,7 @@ namespace WinPlexServer
             this.UniqueId = Guid.NewGuid();
             this._listener = new HttpListener();
             this._listener.Prefixes.Add(listenerPrefix.AbsoluteUri);
+            this._listener.Prefixes.Add(new Uri("http://dazzler.local.:32400/").AbsoluteUri);
             this._listener.Prefixes.Add(new Uri("http://WLON1254.local.:32400/").AbsoluteUri);
             this.IncomingRequest +=new EventHandler<HttpRequestEventArgs>(router.IncomingRequest);
         }

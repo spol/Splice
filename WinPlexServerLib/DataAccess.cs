@@ -158,7 +158,7 @@ namespace WinPlexServer
                 //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
                 //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
 
-                episode.VideoFile = DataAccess.GetVideoFile(episode.Id);
+                episode.VideoFile = DataAccess.GetVideoFileFromParent(episode.Id);
 
                 episodes.Add(episode);
             }
@@ -166,9 +166,32 @@ namespace WinPlexServer
             return episodes;
         }
 
-        internal static VideoFile GetVideoFile(int parentId)
+        internal static VideoFile GetVideoFileFromParent(int parentId)
         {
             SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE parentId = " + parentId.ToString());
+
+            VideoFile vid = new VideoFile();
+
+            reader.Read();
+
+            vid.AspectRatio = reader.GetFloat(reader.GetOrdinal("aspectRatio"));
+            vid.AudioChannels = reader.GetFloat(reader.GetOrdinal("audioChannels"));
+            vid.AudioCodec = reader.GetString(reader.GetOrdinal("audioCodec"));
+            vid.Bitrate = reader.GetInt32(reader.GetOrdinal("bitrate"));
+            vid.Duration = reader.GetInt32(reader.GetOrdinal("duration"));
+            vid.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            vid.VideoCodec = reader.GetString(reader.GetOrdinal("videoCodec"));
+            vid.VideoFrameRate = reader.GetString(reader.GetOrdinal("videoFrameRate"));
+            vid.VideoResolution = reader.GetString(reader.GetOrdinal("videoResolution"));
+            vid.Path = reader.GetString(reader.GetOrdinal("path"));
+            vid.Size = reader.GetInt32(reader.GetOrdinal("size"));
+
+            return vid;
+        }
+
+        internal static VideoFile GetVideoFile(int fileId)
+        {
+            SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE id = " + fileId.ToString());
 
             VideoFile vid = new VideoFile();
 

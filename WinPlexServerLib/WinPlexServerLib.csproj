@@ -61,6 +61,7 @@
     <Compile Include="TVShow.cs" />
     <Compile Include="VideoCollection.cs" />
     <Compile Include="VideoFile.cs" />
+    <Compile Include="VideoResponse.cs" />
     <Compile Include="WebServer.cs" />
     <Compile Include="XmlResponse.cs" />
   </ItemGroup>
