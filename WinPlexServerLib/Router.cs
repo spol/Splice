@@ -37,7 +37,7 @@ namespace WinPlexServer
                 }
             }
             resp.Send(response);
-            response.Close();
+//            response.Close();
         }
 
         public void AddController(string key, IController section)

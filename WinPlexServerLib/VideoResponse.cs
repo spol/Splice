@@ -51,14 +51,23 @@ namespace WinPlexServer
             fs.Seek(Start, SeekOrigin.Begin);
 
             BinaryWriter writer = new BinaryWriter(response.OutputStream);
-            while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0) {
-                totalBytesRead += bytesRead;
-                writer.Write(buffer);
-                totalBytesWritten += bytesRead;
+            try
+            {
+                while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    totalBytesRead += bytesRead;
+                    writer.Write(buffer, 0, bytesRead);
+                    totalBytesWritten += bytesRead;
+                }
+                writer.Close();
+                response.OutputStream.Flush();
+                response.OutputStream.Close();
             }
-            writer.Close();
-            response.OutputStream.Flush();
-            response.OutputStream.Close();
+            catch (HttpListenerException ex)
+            {
+                Console.WriteLine(ex.Message);
+                fs.Close();
+            }
         }
     }
 }
