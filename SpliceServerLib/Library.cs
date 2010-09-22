@@ -189,9 +189,9 @@ namespace WinPlexServer
                     el.SetAttribute("summary", show.Summary);
                     el.SetAttribute("rating", show.Rating.ToString());
                     el.SetAttribute("year", show.Year.ToString());
-                    el.SetAttribute("thumb", show.Thumb);
-                    el.SetAttribute("art", show.Art);
-                    el.SetAttribute("banner", show.Banner);
+                    el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", show.Id, show.LastUpdated));
+                    el.SetAttribute("art", String.Format("/library/metadata/{0}/art?t={1}", show.Id, show.LastUpdated));
+                    el.SetAttribute("banner", String.Format("/library/metadata/{0}/banner?t={1}", show.Id, show.LastUpdated));
                     el.SetAttribute("duration", show.Duration.ToString());
                     el.SetAttribute("originallyAvailableAt", show.OriginallyAvailableAt.ToShortDateString());
                     el.SetAttribute("leafCount", show.LeafCount.ToString());
@@ -226,9 +226,36 @@ namespace WinPlexServer
                 int id = Convert.ToInt32(request.PathSegments[2]);
                 return GetMetaDataChildren(id, request);
             }
+            else if (request.PathSegments.Length == 4 && (request.PathSegments[3] == "art" || request.PathSegments[3] == "thumb" || request.PathSegments[3] == "banner"))
+            {
+                int id = Convert.ToInt32(request.PathSegments[2]);
+                string type = request.PathSegments[3];
+                return GetMetaDataMedia(id, type);
+            }
             else
             {
                 return XmlResponse.NotFound();
+            }
+        }
+
+        private PlexResponse GetMetaDataMedia(int id, string mediaType)
+        {
+            string entityType = DataAccess.GetType(id);
+            switch (entityType)
+            {
+                case "show":
+                    TVShow show = DataAccess.GetTVShow(id);
+                    if (show.GetMedia(mediaType).Length == 0)
+                    {
+                        return XmlResponse.NotFound();
+                    }
+                    else {
+                        ImageResponse resp = new ImageResponse();
+                        resp.FilePath = show.GetMedia(mediaType);
+                        return resp;
+                    }
+                default:
+                    return XmlResponse.NotFound();
             }
         }
 

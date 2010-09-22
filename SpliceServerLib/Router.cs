@@ -36,8 +36,14 @@ namespace WinPlexServer
                     resp = XmlResponse.NotFound();
                 }
             }
-            resp.Send(response);
-//            response.Close();
+            try
+            {
+                resp.Send(response);
+            }
+            catch (Exception ex)
+            {
+                XmlResponse.NotFound().Send(response);
+            }
         }
 
         public void AddController(string key, IController section)

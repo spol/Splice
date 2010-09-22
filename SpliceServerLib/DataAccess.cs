@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace WinPlexServer
 {
@@ -91,13 +92,22 @@ namespace WinPlexServer
             using (SQLiteCommand cmd = Connection.CreateCommand())
             {
                 cmd.CommandText = String.Format(filter.Query, collectionId);
-                SQLiteDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read())
+                SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+                DataTable showsTable = new DataTable();
+                da.Fill(showsTable);
+
+                foreach (DataRow showRow in showsTable.Rows)
                 {
                     TVShow show = new TVShow();
-                    show.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                    show.Title = reader.GetString(reader.GetOrdinal("title"));
+                    
+                    show.Id = Convert.ToInt32(showRow["id"]);
+                    show.Title = Convert.ToString(showRow["title"]);
+                    show.Banner = Convert.ToString(showRow["banner"] == DBNull.Value ? "" : showRow["banner"]);
+                    show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
+                    show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
+                    show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
                     shows.Add(show);
                 }
             }
@@ -112,14 +122,33 @@ namespace WinPlexServer
 
         internal static TVShow GetTVShow(int id)
         {
-            SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_shows WHERE id = " + id.ToString());
-            TVShow show = new TVShow();
-            reader.Read();
-            show.Id = id;
-            show.Title = reader.GetString(reader.GetOrdinal("title"));
-            show.Collection = reader.GetInt32(reader.GetOrdinal("collection"));
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM tv_shows WHERE id = " + id.ToString();
 
-            return show;
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+            DataTable showsTable = new DataTable();
+            da.Fill(showsTable);
+
+            if (showsTable.Rows.Count != 1)
+            {
+                return null;
+            }
+            else
+            {
+                DataRow showRow = showsTable.Rows[0];
+                TVShow show = new TVShow();
+                show.Id = id;
+                show.Collection = Convert.ToInt32(showRow["collection"]);
+
+                show.Title = Convert.ToString(showRow["title"]);
+                show.Banner = Convert.ToString(showRow["banner"] == DBNull.Value ? "" : showRow["banner"]);
+                show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
+                show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
+                show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
+
+                return show;
+            }
         }
 
         internal static List<TVSeason> GetTVSeasons(TVShow show)

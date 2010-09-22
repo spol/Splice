@@ -24,6 +24,22 @@ namespace WinPlexServer
         public int Collection { get; set; }
         public int LeafCount { get; set; }
         public int ViewedLeafCount { get; set; }
+        public int LastUpdated { get; set; }
         // Index?
+
+        internal string GetMedia(string mediaType)
+        {
+            switch (mediaType.ToLower())
+            {
+                case "thumb":
+                    return Thumb;
+                case "art":
+                    return Art;
+                case "banner":
+                    return Banner;
+                default:
+                    throw new Exception("Invalid media type.");
+            }
+        }
     }
 }

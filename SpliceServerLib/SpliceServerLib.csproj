@@ -36,6 +36,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -50,6 +52,7 @@
     <Compile Include="Filter.cs" />
     <Compile Include="Filters\AllTVFilter.cs" />
     <Compile Include="IController.cs" />
+    <Compile Include="ImageResponse.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="PlexRequest.cs" />
     <Compile Include="PlexResponse.cs" />
