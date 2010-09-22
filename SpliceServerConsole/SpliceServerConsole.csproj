@@ -49,9 +49,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WinPlexServerLib\WinPlexServerLib.csproj">
+    <ProjectReference Include="..\SpliceServerLib\SpliceServerLib.csproj">
       <Project>{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}</Project>
-      <Name>WinPlexServerLib</Name>
+      <Name>SpliceServerLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
