@@ -1,12 +1,12 @@
 
-/WinPlexServerConsole/bin
-/WinPlexServerConsole/obj
-/WinPlexManager/bin
-/WinPlexManager/obj
-/WinPlexServerLib/bin
-/WinPlexServerLib/obj
-/WinPlexServerService/bin
-/WinPlexServerService/obj
+/SpliceServerConsole/bin
+/SpliceServerConsole/obj
+/SpliceManager/bin
+/SpliceManager/obj
+/SpliceServerLib/bin
+/SpliceServerLib/obj
+/SpliceServerService/bin
+/SpliceServerService/obj
 /ZeroconfService/bin
 /ZeroconfService/obj
 *.suo
