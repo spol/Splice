@@ -40,7 +40,7 @@ namespace WinPlexServer
             root.SetAttribute("size", "1");
             root.SetAttribute("mediaTagPrefix", "/system/bundle/media/flags");
             root.SetAttribute("mediaTagVersion", "1283229604");
-            root.SetAttribute("art", "/:/resources/library-art.png");
+            root.SetAttribute("art", "/resources/library-art.png");
             root.SetAttribute("title1", "WinPlex Library");
             root.SetAttribute("identify", "com.plexapp.plugins.library");
             xml.AppendChild(root);
@@ -125,7 +125,7 @@ namespace WinPlexServer
             //viewMode="65592" 
             root.SetAttribute("viewMode", "65592");
             //art="/:/resources/show-fanart.jpg" 
-            root.SetAttribute("art", "/:/resources/show-fanart.jpg");
+            root.SetAttribute("art", "/resources/show-fanart.jpg");
             //identifier="com.plexapp.plugins.library"
             root.SetAttribute("identifier", "com.plexapps.plugins.library");
             //title1="TV Shows"
@@ -170,7 +170,7 @@ namespace WinPlexServer
                 //viewMode="65592"
                 root.SetAttribute("viewMode", "65592");
                 //art="/:/resources/show-fanart.jpg"
-                root.SetAttribute("art", "/:/resources/show-fanart.jpg");
+                root.SetAttribute("art", "/resources/show-fanart.jpg");
                 //title1="TV Shows"
                 root.SetAttribute("title1", "TV Shows");
                 //identifier="com.plexapp.plugins.library"

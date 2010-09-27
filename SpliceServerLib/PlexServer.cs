@@ -15,6 +15,7 @@ namespace WinPlexServer
         {
             Router router = new Router();
             router.AddController("library", new Library());
+            router.AddController("resources", new Resources());
             listener = new WebServer(new Uri(ServerTestUrl), router);
             listener.Start();
 

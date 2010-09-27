@@ -108,6 +108,19 @@ namespace WinPlexServer
                     show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
                     show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
                     show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
+                    show.Collection = Convert.ToInt32(showRow["collection"]);
+                    show.ContentRating = showRow["contentRating"].ToString();
+                    show.Duration = Convert.ToInt32(showRow["duration"]);
+                    show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
+                    // TODO.
+                    show.LeafCount = 0;
+                    show.OriginallyAvailableAt = Convert.ToDateTime(showRow["originallyAvailableAt"]);
+                    show.Rating = Convert.ToSingle(showRow["rating"]);
+                    show.Studio = showRow["studio"].ToString();
+                    show.Summary = showRow["summary"].ToString();
+                    // TODO
+                    show.ViewedLeafCount = 0;
+                    show.Year = Convert.ToInt32(showRow["year"]);
                     shows.Add(show);
                 }
             }
