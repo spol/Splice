@@ -13,7 +13,7 @@ namespace WinPlexServer
 
         public string Art
         {
-            get { return "/:/resources/show-fanart.jpg"; }
+            get { return "/resources/show-fanart.jpg"; }
         }
 
         public string Title
