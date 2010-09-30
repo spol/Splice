@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace WinPlexServer
+namespace Splice.Server
 {
     public abstract class PlexResponse
     {

@@ -7,5 +7,8 @@ namespace SpliceWatcher
 {
     public class Watcher
     {
+        public void ScanAll()
+        {
+        }
     }
 }

@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WinPlexServer.Filters;
 
-namespace WinPlexServer
+namespace Splice.Data.Filters
 {
     public abstract class Filter
     {

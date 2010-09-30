@@ -4,8 +4,9 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Data;
+using Splice.Data.Filters;
 
-namespace WinPlexServer
+namespace Splice.Data
 {
     public static class DataAccess
     {
@@ -128,12 +129,12 @@ namespace WinPlexServer
             return shows;
         }
 
-        internal static string GetType(int id)
+        public static string GetType(int id)
         {
             return (string)GetScalar("SELECT type FROM global_ids WHERE id = " + id.ToString());
         }
 
-        internal static TVShow GetTVShow(int id)
+        public static TVShow GetTVShow(int id)
         {
             SQLiteCommand cmd = Connection.CreateCommand();
             cmd.CommandText = "SELECT * FROM tv_shows WHERE id = " + id.ToString();
@@ -164,7 +165,7 @@ namespace WinPlexServer
             }
         }
 
-        internal static List<TVSeason> GetTVSeasons(TVShow show)
+        public static List<TVSeason> GetTVSeasons(TVShow show)
         {
             SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_seasons WHERE showId = " + show.Id.ToString());
 
@@ -182,7 +183,7 @@ namespace WinPlexServer
             return seasons;
         }
 
-        internal static List<TVEpisode> GetTVEpisodes(TVSeason season)
+        public static List<TVEpisode> GetTVEpisodes(TVSeason season)
         {
             SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_episodes WHERE seasonId = " + season.Id.ToString());
 
@@ -208,7 +209,7 @@ namespace WinPlexServer
             return episodes;
         }
 
-        internal static VideoFile GetVideoFileFromParent(int parentId)
+        public static VideoFile GetVideoFileFromParent(int parentId)
         {
             SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE parentId = " + parentId.ToString());
 
@@ -231,7 +232,7 @@ namespace WinPlexServer
             return vid;
         }
 
-        internal static VideoFile GetVideoFile(int fileId)
+        public static VideoFile GetVideoFile(int fileId)
         {
             SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE id = " + fileId.ToString());
 
@@ -254,7 +255,7 @@ namespace WinPlexServer
             return vid;
         }
 
-        internal static TVSeason GetTVSeason(int seasonId)
+        public static TVSeason GetTVSeason(int seasonId)
         {
             SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_seasons WHERE id = " + seasonId.ToString());
             TVSeason season = new TVSeason();

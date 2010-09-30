@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using ZeroconfService;
 
-namespace WinPlexServer
+namespace Splice.Server
 {
     public class PlexServer
     {

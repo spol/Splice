@@ -4,9 +4,9 @@ using System.Linq;
 using System.IO;
 using System.Net;
 using System.Text;
-using WinPlexServer;
+using Splice.Server;
 
-namespace WinPlexServerConsole
+namespace Splice.ConsoleApp
 {
     class Program
     {

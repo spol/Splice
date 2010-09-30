@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WinPlexServer.Filters
+namespace Splice.Data.Filters
 {
     class AllTVFilter : Filter
     {

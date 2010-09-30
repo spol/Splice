@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Net;
 using System.Threading;
 
-namespace WinPlexServer
+namespace Splice.Server
 {
     public class WebServer : IDisposable
     {

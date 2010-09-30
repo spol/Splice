@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace WinPlexServer
+namespace Splice.Data
 {
     public class TVShow
     {
@@ -27,7 +27,7 @@ namespace WinPlexServer
         public int LastUpdated { get; set; }
         // Index?
 
-        internal string GetMedia(string mediaType)
+        public string GetMedia(string mediaType)
         {
             switch (mediaType.ToLower())
             {

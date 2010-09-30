@@ -10,3 +10,7 @@
 /ZeroconfService/bin
 /ZeroconfService/obj
 *.suo
+/SpliceData/bin
+/SpliceData/obj
+/SpliceWatcher/bin
+/SpliceWatcher/obj

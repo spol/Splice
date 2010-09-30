@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml;
+using Splice.Data;
+using Splice.Data.Filters;
 
-namespace WinPlexServer
+namespace Splice.Server
 {
     public class Library : IController
     {

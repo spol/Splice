@@ -38,7 +38,6 @@
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
@@ -51,9 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess.cs" />
-    <Compile Include="Filter.cs" />
-    <Compile Include="Filters\AllTVFilter.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="ImageResponse.cs" />
     <Compile Include="Library.cs" />
@@ -63,16 +59,15 @@
     <Compile Include="Resources.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="PlexServer.cs" />
-    <Compile Include="TVEpisode.cs" />
-    <Compile Include="TVSeason.cs" />
-    <Compile Include="TVShow.cs" />
-    <Compile Include="VideoCollection.cs" />
-    <Compile Include="VideoFile.cs" />
     <Compile Include="VideoResponse.cs" />
     <Compile Include="WebServer.cs" />
     <Compile Include="XmlResponse.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpliceData\SpliceData.csproj">
+      <Project>{966F1DEB-75E2-4817-AC11-1F79768D568B}</Project>
+      <Name>SpliceData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ZeroconfService\ZeroconfService.csproj">
       <Project>{AD5CF7A9-93C4-48DD-ACD8-38DD434F1491}</Project>
       <Name>ZeroconfService</Name>
