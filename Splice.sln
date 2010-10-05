@@ -1,19 +1,18 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpliceManager", "SpliceManager\SpliceManager.csproj", "{82CB1BEC-89D7-47AA-A72E-BA17944229C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Manager", "Splice.Manager\Splice.Manager.csproj", "{82CB1BEC-89D7-47AA-A72E-BA17944229C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpliceServerService", "SpliceServerService\SpliceServerService.csproj", "{064A37E0-88E9-4B59-9064-3C587792B595}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Server.Service", "Splice.Server.Service\Splice.Server.Service.csproj", "{064A37E0-88E9-4B59-9064-3C587792B595}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpliceServerConsole", "SpliceServerConsole\SpliceServerConsole.csproj", "{D26F7702-A859-4BF4-9365-B86C8E3D63BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Server.Console", "Splice.Server.Console\Splice.Server.Console.csproj", "{D26F7702-A859-4BF4-9365-B86C8E3D63BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpliceServerLib", "SpliceServerLib\SpliceServerLib.csproj", "{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Server.Core", "Splice.Server.Core\Splice.Server.Core.csproj", "{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroconfService", "ZeroconfService\ZeroconfService.csproj", "{AD5CF7A9-93C4-48DD-ACD8-38DD434F1491}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpliceWatcher", "SpliceWatcher\SpliceWatcher.csproj", "{87A17A63-BEAE-4EB2-A8F5-453769581A15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Watcher", "Splice.Watcher\Splice.Watcher.csproj", "{87A17A63-BEAE-4EB2-A8F5-453769581A15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpliceData", "SpliceData\SpliceData.csproj", "{966F1DEB-75E2-4817-AC11-1F79768D568B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Data", "Splice.Data\Splice.Data.csproj", "{966F1DEB-75E2-4817-AC11-1F79768D568B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

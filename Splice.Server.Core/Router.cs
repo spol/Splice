@@ -40,7 +40,7 @@ namespace Splice.Server
             {
                 resp.Send(response);
             }
-            catch (Exception ex)
+            catch
             {
                 XmlResponse.NotFound().Send(response);
             }

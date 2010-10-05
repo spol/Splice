@@ -53,18 +53,29 @@ namespace Splice.Data
 
         public static List<VideoCollection> GetVideoCollections()
         {
-            SQLiteDataReader reader = ExecuteReader(@"SELECT * FROM collections");
             List<VideoCollection> collections = new List<VideoCollection>();
 
-            while (reader.Read())
+            using (SQLiteCommand cmd = Connection.CreateCommand())
             {
-                string collectionName = reader.GetString(reader.GetOrdinal("name"));
-                int id = reader.GetInt32(reader.GetOrdinal("id"));
-                int type = reader.GetInt32(reader.GetOrdinal("type"));
-                VideoCollection collection = new VideoCollection(id, collectionName, type);
-                collections.Add(collection);
-            }
+                cmd.CommandText = @"SELECT * FROM collections";
 
+                SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+                DataTable collectionsTable = new DataTable();
+                da.Fill(collectionsTable);
+                
+                foreach (DataRow collectionRow in collectionsTable.Rows)
+                {
+                    VideoCollection collection = new VideoCollection();
+
+                    collection.Id = Convert.ToInt32(collectionRow["id"]);
+                    collection.Type = collectionRow["type"].ToString();
+                    collection.Title = collectionRow["title"].ToString();
+                    collection.Root = collectionRow["root"].ToString();
+
+                    collections.Add(collection);
+                }
+            }
             return collections;
         }
 
@@ -72,18 +83,28 @@ namespace Splice.Data
         {
             using (SQLiteCommand cmd = Connection.CreateCommand())
             {
-                cmd.CommandText = @"SELECT * FROM collections WHERE id = " + id.ToString();
-                SQLiteDataReader reader = cmd.ExecuteReader();
+                cmd.CommandText = String.Format(@"SELECT * FROM collections WHERE id = {0}", id);
 
-                while (reader.Read())
+                SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+                DataTable collectionsTable = new DataTable();
+                da.Fill(collectionsTable);
+
+                if (collectionsTable.Rows.Count == 0)
                 {
-                    string collectionName = reader.GetString(reader.GetOrdinal("name"));
-                    int type = reader.GetInt32(reader.GetOrdinal("type"));
-                    return new VideoCollection(id, collectionName, type);
+                    return null;
+                }
+                else
+                {
+                    DataRow collectionRow = collectionsTable.Rows[0];
+                    VideoCollection collection = new VideoCollection();
+                    collection.Id = Convert.ToInt32(collectionRow["id"]);
+                    collection.Type = collectionRow["type"].ToString();
+                    collection.Title = collectionRow["title"].ToString();
+                    collection.Root = collectionRow["root"].ToString();
+                    return collection;
                 }
             }
-
-            return null;
         }
 
         public static List<TVShow> GetTVShows(int collectionId, Filter filter)
@@ -153,6 +174,37 @@ namespace Splice.Data
                 DataRow showRow = showsTable.Rows[0];
                 TVShow show = new TVShow();
                 show.Id = id;
+                show.Collection = Convert.ToInt32(showRow["collection"]);
+
+                show.Title = Convert.ToString(showRow["title"]);
+                show.Banner = Convert.ToString(showRow["banner"] == DBNull.Value ? "" : showRow["banner"]);
+                show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
+                show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
+                show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
+
+                return show;
+            }
+        }
+
+        public static TVShow GetTVShowFromPath(string Path)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format("SELECT * FROM tv_shows WHERE path = {0}", Path);
+
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+            DataTable showsTable = new DataTable();
+            da.Fill(showsTable);
+
+            if (showsTable.Rows.Count != 1)
+            {
+                return null;
+            }
+            else
+            {
+                DataRow showRow = showsTable.Rows[0];
+                TVShow show = new TVShow();
+                show.Id = Convert.ToInt32(showRow["id"]);
                 show.Collection = Convert.ToInt32(showRow["collection"]);
 
                 show.Title = Convert.ToString(showRow["title"]);

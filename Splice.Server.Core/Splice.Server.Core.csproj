@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{87A17A63-BEAE-4EB2-A8F5-453769581A15}</ProjectGuid>
+    <ProjectGuid>{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpliceWatcher</RootNamespace>
-    <AssemblyName>SpliceWatcher</AssemblyName>
+    <RootNamespace>WinPlexServerLib</RootNamespace>
+    <AssemblyName>WinPlexServerLib</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,6 +35,11 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -45,8 +50,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Watcher.cs" />
+    <Compile Include="IController.cs" />
+    <Compile Include="ImageResponse.cs" />
+    <Compile Include="Library.cs" />
+    <Compile Include="PlexRequest.cs" />
+    <Compile Include="PlexResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="Router.cs" />
+    <Compile Include="PlexServer.cs" />
+    <Compile Include="VideoResponse.cs" />
+    <Compile Include="WebServer.cs" />
+    <Compile Include="XmlResponse.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Splice.Data\Splice.Data.csproj">
+      <Project>{966F1DEB-75E2-4817-AC11-1F79768D568B}</Project>
+      <Name>Splice.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZeroconfService\ZeroconfService.csproj">
+      <Project>{AD5CF7A9-93C4-48DD-ACD8-38DD434F1491}</Project>
+      <Name>ZeroconfService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
