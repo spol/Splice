@@ -189,7 +189,7 @@ namespace Splice.Data
         public static TVShow GetTVShowFromPath(string Path)
         {
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format("SELECT * FROM tv_shows WHERE path = {0}", Path);
+            cmd.CommandText = String.Format("SELECT * FROM tv_shows WHERE lower(path) = lower({0})", Path);
 
             SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 

@@ -8,8 +8,8 @@
     <ProjectGuid>{82CB1BEC-89D7-47AA-A72E-BA17944229C5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinPlexManager</RootNamespace>
-    <AssemblyName>WinPlexManager</AssemblyName>
+    <RootNamespace>Splice.Manager</RootNamespace>
+    <AssemblyName>SpliceManager</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -64,6 +64,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

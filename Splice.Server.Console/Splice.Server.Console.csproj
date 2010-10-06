@@ -8,8 +8,8 @@
     <ProjectGuid>{D26F7702-A859-4BF4-9365-B86C8E3D63BD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinPlexServerConsole</RootNamespace>
-    <AssemblyName>WinPlexServerConsole</AssemblyName>
+    <RootNamespace>Splice.Server.Console</RootNamespace>
+    <AssemblyName>Splice.Server.Console</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

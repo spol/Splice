@@ -8,8 +8,8 @@
     <ProjectGuid>{87A17A63-BEAE-4EB2-A8F5-453769581A15}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpliceWatcher</RootNamespace>
-    <AssemblyName>SpliceWatcher</AssemblyName>
+    <RootNamespace>Splice.Watcher</RootNamespace>
+    <AssemblyName>Splice.Watcher</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

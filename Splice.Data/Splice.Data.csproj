@@ -8,8 +8,8 @@
     <ProjectGuid>{966F1DEB-75E2-4817-AC11-1F79768D568B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpliceData</RootNamespace>
-    <AssemblyName>SpliceData</AssemblyName>
+    <RootNamespace>Splice.Data</RootNamespace>
+    <AssemblyName>Splice.Data</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

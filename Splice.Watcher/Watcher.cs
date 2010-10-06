@@ -49,12 +49,24 @@ namespace SpliceWatcher
                 if (show != null)
                 {
                     // Show already in DB
+                    UpdateShow(show);
                 }
                 else
                 {
                     // New Show.
+                    LookupShow(showDir.Name);
                 }
             }
+        }
+
+        private void UpdateShow(TVShow show)
+        {
+            DirectoryInfo showDir = new DirectoryInfo(show.Location);
+        }
+
+        private void LookupShow(string p)
+        {
+            throw new NotImplementedException();
         }
     }
 }
