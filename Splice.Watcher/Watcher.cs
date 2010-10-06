@@ -62,6 +62,11 @@ namespace SpliceWatcher
         private void UpdateShow(TVShow show)
         {
             DirectoryInfo showDir = new DirectoryInfo(show.Location);
+            FileInfo[] files = showDir.GetFiles();
+
+            foreach (FileInfo file in files)
+            {
+            }
         }
 
         private void LookupShow(string p)
