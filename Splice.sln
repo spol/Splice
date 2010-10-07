@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Data", "Splice.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvdbLib", "TvdbLib\TvdbLib.csproj", "{23C34CF0-4E66-4F02-9EDC-83F292C6005C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Reporting", "Splice.Reporting\Splice.Reporting.csproj", "{6FFF4196-812F-4DC0-86FB-7C4123877E9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,12 @@ Global
 		{23C34CF0-4E66-4F02-9EDC-83F292C6005C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{23C34CF0-4E66-4F02-9EDC-83F292C6005C}.Release|x86.ActiveCfg = Release|x86
 		{23C34CF0-4E66-4F02-9EDC-83F292C6005C}.Release|x86.Build.0 = Release|x86
+		{6FFF4196-812F-4DC0-86FB-7C4123877E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FFF4196-812F-4DC0-86FB-7C4123877E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FFF4196-812F-4DC0-86FB-7C4123877E9F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6FFF4196-812F-4DC0-86FB-7C4123877E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FFF4196-812F-4DC0-86FB-7C4123877E9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FFF4196-812F-4DC0-86FB-7C4123877E9F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

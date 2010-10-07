@@ -142,7 +142,6 @@ namespace Splice.Data
                     show.Summary = showRow["summary"].ToString();
                     // TODO
                     show.ViewedLeafCount = 0;
-                    show.Year = Convert.ToInt32(showRow["year"]);
                     shows.Add(show);
                 }
             }
@@ -189,7 +188,7 @@ namespace Splice.Data
         public static TVShow GetTVShowFromPath(string Path)
         {
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format("SELECT * FROM tv_shows WHERE lower(path) = lower({0})", Path);
+            cmd.CommandText = String.Format("SELECT * FROM tv_shows WHERE lower(location) = lower('{0}')", Path);
 
             SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
@@ -212,6 +211,7 @@ namespace Splice.Data
                 show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
                 show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
                 show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
+                show.Location = showRow["location"].ToString();
 
                 return show;
             }
@@ -318,6 +318,11 @@ namespace Splice.Data
             season.ShowId = reader.GetInt32(reader.GetOrdinal("showId"));
 
             return season;
+        }
+
+        public static TVShow SaveTVShow(TVShow show)
+        {
+            return show;
         }
     }
 }

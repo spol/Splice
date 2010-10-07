@@ -5,8 +5,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Splice.Server;
+using Splice.Watcher;
 
-namespace Splice.ConsoleApp
+namespace Splice.Server.Console
 {
     class Program
     {
@@ -16,8 +17,14 @@ namespace Splice.ConsoleApp
             PlexServer server = new PlexServer(ServerTestUrl);
 //            Console.WriteLine("Listener accepting requests: {0}", listener.RunState == WebServer.State.Started);
 
-            Console.WriteLine("Done. Press any key to exit.");
-            Console.ReadLine();
+            ConsoleLogger logger = new ConsoleLogger();
+
+            FileSystemScanner fsWatcher = new FileSystemScanner(logger);
+
+            fsWatcher.ScanAll();
+
+            System.Console.WriteLine("Done. Press any key to exit.");
+            System.Console.ReadLine();
 
             
         }

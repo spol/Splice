@@ -915,6 +915,7 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_interval">interval of update</param>
     /// <param name="_zipped">zipped downloading yes/no</param>
+    /// <param name="_reloadOldContent"></param>
     /// <returns>true if successful, false otherwise</returns>
     private bool MakeUpdate(Interval _interval, bool _zipped, bool _reloadOldContent)
     {
@@ -1634,7 +1635,7 @@ namespace TvdbLib
     /// <param name="_loadEpisodes">Should episodes be loaded as well</param>
     /// <param name="_loadActors">Should actors be loaded as well</param>
     /// <param name="_loadBanners">Should banners be loaded as well</param>
-    /// <param name="_deleteArtwork">If yes, also deletes previously loaded images</param>
+    /// <param name="_replaceArtwork">If yes, also deletes previously loaded images</param>
     /// <returns>The new TvdbSeries object</returns>
     public TvdbSeries ForceReload(TvdbSeries _series, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners, bool _replaceArtwork)

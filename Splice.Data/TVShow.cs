@@ -14,8 +14,8 @@ namespace Splice.Data
         public string Type { get { return "show"; } }
         public string ContentRating { get; set; }
         public string Summary { get; set; }
-        public float Rating { get; set; }
-        public int Year { get; set; }
+        public double Rating { get; set; }
+        public int Year { get { return OriginallyAvailableAt.Year; } }
         public string Thumb { get; set; }
         public string Art { get; set; }
         public string Banner { get; set; }

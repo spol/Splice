@@ -45,13 +45,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Watcher.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FileSystemScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Splice.Data\Splice.Data.csproj">
       <Project>{966F1DEB-75E2-4817-AC11-1F79768D568B}</Project>
       <Name>Splice.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Splice.Reporting\Splice.Reporting.csproj">
+      <Project>{6FFF4196-812F-4DC0-86FB-7C4123877E9F}</Project>
+      <Name>Splice.Reporting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TvdbLib\TvdbLib.csproj">
+      <Project>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</Project>
+      <Name>TvdbLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

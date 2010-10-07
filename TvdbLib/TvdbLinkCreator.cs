@@ -275,7 +275,7 @@ namespace TvdbLib
     /// <summary>
     /// Creates a link to retrieve a series by external id (currently only imdb id supported)
     /// 
-    /// http://forums.thetvdb.com/viewtopic.php?f=8&t=3724&start=0
+    /// http://forums.thetvdb.com/viewtopic.php?f=8&amp;t=3724&amp;start=0
     /// </summary>
     /// <param name="_apiKey">api key</param>
     /// <param name="_site">type of external site</param>
