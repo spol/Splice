@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<splice>
+  <video>
+    <fileTypes>
+      <filetype name="AVI">
+        <extension>avi</extension>
+      </filetype>
+      <filetype name="MPEG 4">
+        <extension>mp4</extension>
+        <extension>m4v</extension>
+      </filetype>
+      <filetype name="Matroska">
+        <extension>mkv</extension>
+      </filetype>
+    </fileTypes>
+  </video>
+</splice>

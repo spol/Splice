@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D26F7702-A859-4BF4-9365-B86C8E3D63BD}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Splice.Server.Console</RootNamespace>
-    <AssemblyName>Splice.Server.Console</AssemblyName>
+    <RootNamespace>Splice.Configuration</RootNamespace>
+    <AssemblyName>Splice.Configuration</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -45,33 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleLogger.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Manager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Splice.Configuration\Splice.Configuration.csproj">
-      <Project>{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}</Project>
-      <Name>Splice.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Splice.Reporting\Splice.Reporting.csproj">
-      <Project>{6FFF4196-812F-4DC0-86FB-7C4123877E9F}</Project>
-      <Name>Splice.Reporting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Splice.Server.Core\Splice.Server.Core.csproj">
-      <Project>{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}</Project>
-      <Name>Splice.Server.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Splice.Watcher\Splice.Watcher.csproj">
-      <Project>{87A17A63-BEAE-4EB2-A8F5-453769581A15}</Project>
-      <Name>Splice.Watcher</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="data.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

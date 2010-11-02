@@ -14,3 +14,10 @@
 /ZeroconfService/bin
 /ZeroconfService/obj
 *.suo
+
+/Splice.Configuration/bin
+/Splice.Configuration/obj
+/Splice.Reporting/bin
+/Splice.Reporting/obj
+/TvdbLib/bin
+/TvdbLib/obj
