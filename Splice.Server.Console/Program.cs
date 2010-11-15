@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using Splice.Server;
 using Splice.Watcher;
-
 using Splice.Configuration;
 
 namespace Splice.Server.Console
@@ -20,10 +19,10 @@ namespace Splice.Server.Console
 
             ConsoleLogger logger = new ConsoleLogger();
 
-            //FileSystemScanner fsWatcher = new FileSystemScanner(logger);
+            FileSystemScanner fsWatcher = new FileSystemScanner(logger);
 
-            //fsWatcher.ScanAll();
-            Manager.GetAppConfiguration();
+            fsWatcher.ScanAll();
+            //ConfigurationManager.GetAppConfiguration();
 
             System.Console.WriteLine("Done. Press any key to exit.");
             System.Console.ReadLine();

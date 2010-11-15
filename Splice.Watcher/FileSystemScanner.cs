@@ -61,6 +61,7 @@ namespace Splice.Watcher
                 {
                     // New Show.
                     TvdbSeries series = LookupShow(showDir.Name);
+                    Reporting.Log("Matched: " + series.SeriesName);
                     show = new TVShow();
                     show.Collection = collection.Id;
                     show.Art = series.FanartPath;
@@ -88,6 +89,7 @@ namespace Splice.Watcher
 
         private void UpdateShow(TVShow show)
         {
+            Reporting.Log("Updating show: " + show.Title);
             DirectoryInfo showDir = new DirectoryInfo(show.Location);
             FileInfo[] files = showDir.GetFiles();
 

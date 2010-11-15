@@ -322,6 +322,57 @@ namespace Splice.Data
 
         public static TVShow SaveTVShow(TVShow show)
         {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"INSERT INTO tv_shows (title, tvdbId, collection, studio, contentRating, summary, rating, year, thumb, art, banner, 
+duration, originallyAvailableAt, lastUpdated, location) VALUES ( 
+                @Title,
+                @TvdbId,
+                @Collection,
+                @Studio,
+                @ContentRating,
+                @Summary,
+                @Rating,
+                @Year,
+                @Thumb,
+                @Art,
+                @Banner,
+                @Duration,
+                @AirDate,
+                @LastUpdated,
+                @Location); SELECT last_insert_rowid() AS ShowId;");
+            cmd.Parameters.Add("@Title", DbType.AnsiString);
+            cmd.Parameters["@Title"].Value = show.Title;
+            // TODO
+            cmd.Parameters.Add("@TvdbId", DbType.Int32);
+            cmd.Parameters["@TvdbId"].Value = 0;
+            cmd.Parameters.Add("@Collection", DbType.Int32);
+            cmd.Parameters["@Collection"].Value = show.Collection;
+            cmd.Parameters.Add("@Studio", DbType.String);
+            cmd.Parameters["@Studio"].Value = show.Studio;
+            cmd.Parameters.Add("@ContentRating", DbType.AnsiString);
+            cmd.Parameters["@ContentRating"].Value = show.ContentRating;
+            cmd.Parameters.Add("@Summary", DbType.String);
+            cmd.Parameters["@Summary"].Value = show.Summary;
+            cmd.Parameters.Add("@Rating", DbType.Double);
+            cmd.Parameters["@Rating"].Value = show.Rating;
+            cmd.Parameters.Add("@Year", DbType.Int32);
+            cmd.Parameters["@Year"].Value = show.Year;
+            cmd.Parameters.Add("@Thumb", DbType.String);
+            cmd.Parameters["@Thumb"].Value = show.Thumb;
+            cmd.Parameters.Add("@Art", DbType.String);
+            cmd.Parameters["@Art"].Value = show.Art;
+            cmd.Parameters.Add("@Banner", DbType.String);
+            cmd.Parameters["@Banner"].Value = show.Banner;
+            cmd.Parameters.Add("@Duration", DbType.Int32);
+            cmd.Parameters["@Duration"].Value = show.Duration;
+            cmd.Parameters.Add("@AirDate", DbType.DateTime);
+            cmd.Parameters["@AirDate"].Value = show.OriginallyAvailableAt;
+            cmd.Parameters.Add("@LastUpdated", DbType.Int32);
+            cmd.Parameters["@LastUpdated"].Value = show.LastUpdated;
+            cmd.Parameters.Add("@Location", DbType.String);
+            cmd.Parameters["@Location"].Value = show.Location;
+
+            show.Id = Convert.ToInt32(cmd.ExecuteScalar());
             return show;
         }
     }
