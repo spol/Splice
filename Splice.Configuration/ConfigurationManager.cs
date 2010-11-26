@@ -9,6 +9,15 @@ namespace Splice.Configuration
 {
     public static class ConfigurationManager
     {
+        public static List<string> VideoExtensions
+        {
+            get
+            {
+                List<string> Extensions = new List<string>();
+                Extensions.Add(".txt");
 
+                return Extensions;
+            }
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Splice.Data
         public string Title { get; set; }
         public int SeasonNumber { get; set; }
         public Int32 ShowId { get; set; }
+        public string Art { get; set; }
     }
 }

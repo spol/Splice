@@ -26,6 +26,7 @@ namespace Splice.Data
         public int ViewedLeafCount { get; set; }
         public int LastUpdated { get; set; }
         public string Location { get; set; }
+        public int TvdbId { get; set; }
         // Index?
 
         public string GetMedia(string mediaType)
