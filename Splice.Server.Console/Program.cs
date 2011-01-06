@@ -17,14 +17,12 @@ namespace Splice.Server.Console
             const string ServerTestUrl = "http://localhost:32400/";
             //PlexServer server = new PlexServer(ServerTestUrl);
 
-            Config.Serialize("Settings.xml", new Config());
-
             ConsoleLogger logger = new ConsoleLogger();
+            ConfigurationManager.LoadConfig();
 
             FileSystemScanner fsWatcher = new FileSystemScanner(logger);
-
+            
             fsWatcher.ScanAll();
-            //ConfigurationManager.GetAppConfiguration();
 
             System.Console.WriteLine("Done. Press any key to exit.");
             System.Console.ReadLine();

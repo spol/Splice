@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using Splice.Data.Filters;
+using Splice.Configuration;
 
 namespace Splice.Data
 {
@@ -18,7 +19,7 @@ namespace Splice.Data
                 if (_connection == null)
                 {
                     SQLiteConnectionStringBuilder csb = new SQLiteConnectionStringBuilder();
-                    csb.DataSource = "data.db";
+                    csb.DataSource = ConfigurationManager.DBFilePath;
 
                     _connection = new SQLiteConnection(csb.ToString());
                     _connection.Open();

@@ -9,21 +9,29 @@ using System.Xml.Serialization;
 namespace Splice.Configuration
 {
     [Serializable]
-    public class Config
+    public class SpliceConfiguration
     {
-        int _Version;
-        string _StringItem;
-        int _IntItem;
         List<string> _Extensions;
 
-        public Config()
+        public static SpliceConfiguration DefaultConfiguration
+        {
+            get
+            {
+                SpliceConfiguration Config = new SpliceConfiguration();
+                Config.VideoExtensions.Add("mkv");
+                Config.VideoExtensions.Add("avi");
+                Config.VideoExtensions.Add("m4v");
+
+                return Config;
+           }
+        }
+
+        public SpliceConfiguration()
         {
             _Extensions = new List<string>();
-            _Extensions.Add("mkv");
-            _Extensions.Add("avi");
-            _Extensions.Add("m4v");
         }
-        public static void Serialize(string file, Config c)
+
+        public static void Serialize(string file, SpliceConfiguration c)
         {
             System.Xml.Serialization.XmlSerializer xs
                = new System.Xml.Serialization.XmlSerializer(c.GetType());
@@ -32,20 +40,20 @@ namespace Splice.Configuration
             writer.Flush();
             writer.Close();
         }
-        public static Config Deserialize(string file)
+        public static SpliceConfiguration Deserialize(string file)
         {
             System.Xml.Serialization.XmlSerializer xs
                = new System.Xml.Serialization.XmlSerializer(
-                  typeof(Config));
+                  typeof(SpliceConfiguration));
             StreamReader reader = File.OpenText(file);
-            Config c = (Config)xs.Deserialize(reader);
+            SpliceConfiguration c = (SpliceConfiguration)xs.Deserialize(reader);
             reader.Close();
             return c;
         }
 
 
         [XmlArrayItem("Extension")]
-        public List<string> Extensions
+        public List<string> VideoExtensions
         {
             get { return _Extensions; }
             set { _Extensions = value; }

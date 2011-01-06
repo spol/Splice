@@ -111,7 +111,7 @@ namespace Splice.Watcher
 
                 foreach (FileInfo File in Dir.GetFiles())
                 {
-                    if (ConfigurationManager.VideoExtensions.Contains(File.Extension))
+                    if (ConfigurationManager.CurrentConfiguration.VideoExtensions.Contains(File.Extension))
                     {
                         UpdateFile(File, Show, Season);
                     }
