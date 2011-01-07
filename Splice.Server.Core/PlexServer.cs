@@ -16,7 +16,7 @@ namespace Splice.Server
             Router router = new Router();
             router.AddController("library", new Library());
             router.AddController("resources", new Resources());
-            listener = new WebServer(new Uri(ServerTestUrl), router);
+            listener = new WebServer(ServerTestUrl, router);
             listener.Start();
 
             String domain = "";

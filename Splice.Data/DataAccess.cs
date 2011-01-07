@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Data;
@@ -18,6 +19,10 @@ namespace Splice.Data
             {
                 if (_connection == null)
                 {
+                    if (!File.Exists(ConfigurationManager.DBFilePath))
+                    {
+                        File.Copy("data.db", ConfigurationManager.DBFilePath);
+                    }
                     SQLiteConnectionStringBuilder csb = new SQLiteConnectionStringBuilder();
                     csb.DataSource = ConfigurationManager.DBFilePath;
 

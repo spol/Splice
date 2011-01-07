@@ -28,7 +28,14 @@ namespace Splice.Watcher
 
             foreach (VideoCollection collection in collections)
             {
-                ScanCollection(collection);
+                try
+                {
+                    ScanCollection(collection);
+                }
+                catch (IOException Ex)
+                {
+                    Reporting.Log(Ex.Message);
+                }
             }
         }
 
@@ -52,7 +59,13 @@ namespace Splice.Watcher
 
         private void ScanTVCollection(VideoCollection collection)
         {
+            
             DirectoryInfo dirInfo = new DirectoryInfo(collection.Root);
+
+            if (!dirInfo.Exists)
+            {
+                throw new IOException(String.Format("Collection root doesn't exist. ({0})", collection.Root));
+            }
 
             DirectoryInfo[] showDirectories = dirInfo.GetDirectories();
 

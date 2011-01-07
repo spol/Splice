@@ -34,7 +34,7 @@ namespace Splice.Server
 
         public virtual Uri Url { get; private set; }
 
-        public WebServer(Uri listenerPrefix, Router router)
+        public WebServer(string listenerPrefix, Router router)
         {
             if (!HttpListener.IsSupported)
             {
@@ -46,9 +46,7 @@ namespace Splice.Server
             }
             this.UniqueId = Guid.NewGuid();
             this._listener = new HttpListener();
-            this._listener.Prefixes.Add(listenerPrefix.AbsoluteUri);
-            this._listener.Prefixes.Add(new Uri("http://dazzler.local.:32400/").AbsoluteUri);
-            this._listener.Prefixes.Add(new Uri("http://WLON1254.local.:32400/").AbsoluteUri);
+            this._listener.Prefixes.Add(listenerPrefix);
             this.IncomingRequest +=new EventHandler<HttpRequestEventArgs>(router.IncomingRequest);
         }
 
