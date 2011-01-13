@@ -12,6 +12,7 @@ namespace Splice.Configuration
     public class SpliceConfiguration
     {
         List<string> _Extensions;
+        List<string> _TVRegexes;
 
         public static SpliceConfiguration DefaultConfiguration
         {
@@ -21,7 +22,7 @@ namespace Splice.Configuration
                 Config.VideoExtensions.Add("mkv");
                 Config.VideoExtensions.Add("avi");
                 Config.VideoExtensions.Add("m4v");
-
+                Config.TVRegexes.Add(@"(\d+).*?(\d+).*");
                 return Config;
            }
         }
@@ -29,6 +30,7 @@ namespace Splice.Configuration
         public SpliceConfiguration()
         {
             _Extensions = new List<string>();
+            _TVRegexes = new List<string>();
         }
 
         public static void Serialize(string file, SpliceConfiguration c)
@@ -57,6 +59,13 @@ namespace Splice.Configuration
         {
             get { return _Extensions; }
             set { _Extensions = value; }
+        }
+
+        [XmlArrayItem("Regex")]
+        public List<string> TVRegexes
+        {
+            get { return _TVRegexes; }
+            set { _TVRegexes = value; }
         }
     }
 }

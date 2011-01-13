@@ -15,6 +15,7 @@ namespace Splice.Watcher
     public class FileSystemScanner
     {
         private ILogger Reporting;
+        private string TvdbApiKey = "572AD6335A69FAB2";
 
         public FileSystemScanner(ILogger reporting)
         {
@@ -106,30 +107,125 @@ namespace Splice.Watcher
         private void UpdateShow(TVShow Show)
         {
             Reporting.Log("Updating show: " + Show.Title);
-            DirectoryInfo showDir = new DirectoryInfo(Show.Location);
-            DirectoryInfo[] Dirs = showDir.GetDirectories();
 
-            // Pull out the first number in the folder as the season number. Default to 0 (Specials).
-            Regex SeasonRegex = new Regex(@"(\d+)", RegexOptions.IgnoreCase);
-            foreach (DirectoryInfo Dir in Dirs)
+            string[] VideoPaths = Directory.GetFiles(Show.Location, "*.*", SearchOption.AllDirectories);
+
+            List<VideoFileInfo> Videos = new List<VideoFileInfo>();
+//            Reporting.Log(VideoPaths.Length.ToString());
+            foreach (string VidPath in VideoPaths)
             {
-                int SeasonNumber = 0;
-                MatchCollection Matches = SeasonRegex.Matches(Dir.Name);
-                if (Matches.Count > 0)
+                if (!ConfigurationManager.CurrentConfiguration.VideoExtensions.Contains(new FileInfo(VidPath).Extension.Trim('.')))
                 {
-                    SeasonNumber = Convert.ToInt32(Matches[0].Captures[0].Value);
+                    //Reporting.Log("Skipping: " + VidPath);
+                    //Reporting.Log(new FileInfo(VidPath).Extension.Trim('.'));
+                    continue;
                 }
+                
+                Reporting.Log(VidPath);
+                VideoFileInfo VidFile = new VideoFileInfo(VidPath);
 
-                TVSeason Season = UpdateSeason(Dir, Show, SeasonNumber);
+                VideoFileInfo CurrentFile = DataAccess.GetVideoFileFromHash(VidFile.Hash);
+                Reporting.Log(VidFile.Hash);
 
-                foreach (FileInfo File in Dir.GetFiles())
+                if (CurrentFile != null)
                 {
-                    if (ConfigurationManager.CurrentConfiguration.VideoExtensions.Contains(File.Extension))
+                    // File has been seen before.
+                    Reporting.Log("Already seen");
+
+                    if (CurrentFile.Path != VidFile.Path)
                     {
-                        UpdateFile(File, Show, Season);
+                        Reporting.Log("Updating location.");
+                        // Update video file location.
+                        CurrentFile.Path = VidFile.Path;
+                        DataAccess.SaveVideoFile(CurrentFile);
                     }
                 }
+                else
+                {
+                    // new file.
+                    string RelativePath = VidPath.Replace(Show.Location, "");
+
+                    int SeasonNumber = -1;
+                    int EpisodeNumber = -1;
+                    foreach (string Regex in ConfigurationManager.CurrentConfiguration.TVRegexes)
+                    {
+//                        Reporting.Log(Regex);
+                        Regex R = new Regex(Regex);
+                        Match M = R.Match(RelativePath);
+                        if (M.Success)
+                        {
+                            if (M.Groups.Count < 1)
+                            {
+                                continue;
+                            }
+                            else if (M.Groups.Count == 2)
+                            {
+                                EpisodeNumber = Convert.ToInt32(M.Groups[1].Value);
+                            }
+                            else
+                            {
+                                SeasonNumber = Convert.ToInt32(M.Groups[1].Value);
+                                EpisodeNumber = Convert.ToInt32(M.Groups[2].Value);
+                            }
+                            break;
+                        }
+                    }
+
+                    if (EpisodeNumber == 0)
+                    {
+                        Reporting.Log(RelativePath + " does not match any TV regexes in config file.");
+                        return;
+                    }
+
+                    // check for presence of season
+                    TVSeason Season = DataAccess.GetTVSeason(Show, SeasonNumber);
+
+                    if (Season == null)
+                    {
+                        // insert season if not present.
+                        Season = new TVSeason() { SeasonNumber = SeasonNumber, ShowId = Show.Id };
+                        Season = DataAccess.SaveSeason(Season);
+                        //ODO: Fetch and save artwork for season.
+                    }
+
+                    // check for presence of episode
+                    TVEpisode Episode = DataAccess.GetTVEpisode(Show, Season, EpisodeNumber);
+
+                    // insert ep if not present
+                    if (Episode == null)
+                    {
+                        TvdbEpisode TvdbEp = LookupEpisode(Show, Season, EpisodeNumber);
+
+                        if (TvdbEp == null)
+                        {
+                            Reporting.Log(String.Format("Episode not found: {0} - {1}x{2} ({3})", Show.Title, Season.SeasonNumber, EpisodeNumber, VidFile.Path));
+                            continue;
+                        }
+                        Episode = new TVEpisode() { 
+                            EpisodeNumber = EpisodeNumber,
+                            SeasonId = Season.Id,
+                            AirDate = TvdbEp.FirstAired,
+                            Rating = TvdbEp.Rating,
+                            Summary = TvdbEp.Overview,
+                            Title = TvdbEp.EpisodeName,
+                            TvdbId = TvdbEp.Id,
+                        };
+                        Episode = DataAccess.SaveEpisode(Episode);
+
+                        // TODO: Save artwork for episode.
+                    }
+
+                    // save video file
+                    VidFile = DataAccess.SaveVideoFile(VidFile);
+
+                    // add video file to episode.
+                    DataAccess.AssocVideoWithEpisode(VidFile, Episode);
+                }
+
             }
+
+            // TODO: Clean up missing files.
+
         }
 
         private TVSeason UpdateSeason(DirectoryInfo Dir, TVShow Show, int SeasonNumber)
@@ -153,61 +249,22 @@ namespace Splice.Watcher
             }
         }
 
-        private void UpdateFile(FileInfo File, TVShow Show, TVSeason Season)
-        {
-            Regex EpisodeRegex = new Regex(@"^(\d+)");
-
-            MatchCollection Matches = EpisodeRegex.Matches(File.Name);
-            int EpisodeNumber;
-            if (Matches.Count > 0)
-            {
-                EpisodeNumber = Convert.ToInt32(Matches[0].Captures[0].Value);
-
-            }
-            else
-            {
-                return;
-            }
-            TVEpisode Episode = DataAccess.GetTVEpisode(Show, Season, EpisodeNumber);
-
-            if (Episode != null)
-            {
-                if (Episode.VideoFile.Path == File.FullName)
-                {
-                    // Compare hashes
-                }
-                else
-                {
-                    // Update Path
-                }
-            }
-            else
-            {
-                // New File
-                TvdbEpisode TVDBEpisode = LookupEpisode(Show.TvdbId, Season.SeasonNumber, EpisodeNumber);
-
-
-
-                Episode = new TVEpisode()
-                {
-                    SeasonId = Season.Id,
-                    EpisodeNumber = EpisodeNumber,
-                    Title = TVDBEpisode.EpisodeName
-                };
-
-                // Save Episode
-            }
-        }
-
         private TvdbSeries LookupShow(string name)
         {
             Reporting.Log("Looking up show: " + name);
-            TvdbHandler handler = new TvdbHandler("572AD6335A69FAB2");
+            TvdbHandler handler = new TvdbHandler(TvdbApiKey);
 
             List<TvdbSearchResult> results = handler.SearchSeries(name);
 
             TvdbSearchResult first = results.First();
             return handler.GetBasicSeries(first.Id, TvdbLanguage.DefaultLanguage, true);
+        }
+
+        private TvdbEpisode LookupEpisode(TVShow Show, TVSeason Season, Int32 EpisodeNumber)
+        {
+            TvdbHandler Handler = new TvdbHandler(TvdbApiKey);
+
+            return Handler.GetEpisode(Show.TvdbId, Season.SeasonNumber, EpisodeNumber, TvdbEpisode.EpisodeOrdering.DefaultOrder, TvdbLanguage.DefaultLanguage);
         }
 
         private TvdbEpisode LookupEpisode(int TvdbId, int SeasonNumber, int EpisodeNumber)

@@ -57,6 +57,15 @@ namespace Splice.Data
             return null;
         }
 
+        private static Int32 GetNewGlobalId(string Type)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"INSERT INTO global_ids (type) VALUES (@Type); SELECT last_insert_rowid() AS Id;");
+            cmd.Parameters.Add(new SQLiteParameter("@Type", DbType.String ) { Value = Type });
+
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
         public static List<VideoCollection> GetVideoCollections()
         {
             List<VideoCollection> collections = new List<VideoCollection>();
@@ -261,17 +270,17 @@ namespace Splice.Data
                 TVEpisode Episode = new TVEpisode()
                 {
                     AirDate = Convert.ToDateTime(Row["airDate"]),
-                    Duration = Convert.ToInt32(Row["duration"]),
+                    //Duration = Convert.ToInt32(Row["duration"]),
                     EpisodeNumber = EpisodeNumber,
                     Id = Convert.ToInt32(Row["id"]),
                     Rating = Convert.ToSingle(Row["rating"]),
                     SeasonId = Season.Id,
                     Summary = Row["Summary"].ToString(),
                     Title = Row["title"].ToString(),
-                    VideoFile = new VideoFile()
-                    {
-                        Path = Row["path"].ToString()
-                    }
+                    //VideoFile = new VideoFile()
+                    //{
+                    //    Path = Row["path"].ToString()
+                    //}
                 };
 
                 return Episode;
@@ -298,7 +307,7 @@ namespace Splice.Data
                 //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
                 //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
 
-                episode.VideoFile = DataAccess.GetVideoFileFromParent(episode.Id);
+                episode.VideoFiles = DataAccess.GetVideoFilesForEpisode(episode.Id);
 
                 episodes.Add(episode);
             }
@@ -306,50 +315,51 @@ namespace Splice.Data
             return episodes;
         }
 
-        public static VideoFile GetVideoFileFromParent(int parentId)
+        public static List<VideoFileInfo> GetVideoFilesForEpisode(int EpisodeNumber)
         {
-            SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE parentId = " + parentId.ToString());
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM video_files v LEFT JOIN episode2video e2v ON v.id = e2v.videoId WHERE e2v.episodeId = @EpisodeNumber";
 
-            VideoFile vid = new VideoFile();
+            cmd.Parameters.Add(new SQLiteParameter("@EpisodeNumber", DbType.Int32) { Value = EpisodeNumber });
 
-            reader.Read();
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
-            vid.AspectRatio = reader.GetFloat(reader.GetOrdinal("aspectRatio"));
-            vid.AudioChannels = reader.GetFloat(reader.GetOrdinal("audioChannels"));
-            vid.AudioCodec = reader.GetString(reader.GetOrdinal("audioCodec"));
-            vid.Bitrate = reader.GetInt32(reader.GetOrdinal("bitrate"));
-            vid.Duration = reader.GetInt32(reader.GetOrdinal("duration"));
-            vid.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            vid.VideoCodec = reader.GetString(reader.GetOrdinal("videoCodec"));
-            vid.VideoFrameRate = reader.GetString(reader.GetOrdinal("videoFrameRate"));
-            vid.VideoResolution = reader.GetString(reader.GetOrdinal("videoResolution"));
-            vid.Path = reader.GetString(reader.GetOrdinal("path"));
-            vid.Size = reader.GetInt32(reader.GetOrdinal("size"));
+            DataTable VideoFileTable = new DataTable();
+            da.Fill(VideoFileTable);
 
-            return vid;
+            List<VideoFileInfo> Files = new List<VideoFileInfo>();
+
+            foreach (DataRow Row in VideoFileTable.Rows)
+            {
+                Files.Add(new VideoFileInfo(Row["path"].ToString()));
+            }
+
+            return Files;
         }
 
-        public static VideoFile GetVideoFile(int fileId)
+        public static VideoFileInfo GetVideoFile(int FileId)
         {
-            SQLiteDataReader reader = ExecuteReader("SELECT * FROM video_files WHERE id = " + fileId.ToString());
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM video_files WHERE id = @Id";
 
-            VideoFile vid = new VideoFile();
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = FileId });
 
-            reader.Read();
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
-            vid.AspectRatio = reader.GetFloat(reader.GetOrdinal("aspectRatio"));
-            vid.AudioChannels = reader.GetFloat(reader.GetOrdinal("audioChannels"));
-            vid.AudioCodec = reader.GetString(reader.GetOrdinal("audioCodec"));
-            vid.Bitrate = reader.GetInt32(reader.GetOrdinal("bitrate"));
-            vid.Duration = reader.GetInt32(reader.GetOrdinal("duration"));
-            vid.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            vid.VideoCodec = reader.GetString(reader.GetOrdinal("videoCodec"));
-            vid.VideoFrameRate = reader.GetString(reader.GetOrdinal("videoFrameRate"));
-            vid.VideoResolution = reader.GetString(reader.GetOrdinal("videoResolution"));
-            vid.Path = reader.GetString(reader.GetOrdinal("path"));
-            vid.Size = reader.GetInt32(reader.GetOrdinal("size"));
+            DataTable VideoFileTable = new DataTable();
+            da.Fill(VideoFileTable);
 
-            return vid;
+            if (VideoFileTable.Rows.Count == 1)
+            {
+                DataRow Row = VideoFileTable.Rows[0];
+
+                VideoFileInfo VideoFile = new VideoFileInfo(Row);
+
+                return VideoFile;
+            }
+            else {
+                return null;
+            }
         }
 
         public static TVSeason GetTVSeason(int seasonId)
@@ -399,9 +409,12 @@ namespace Splice.Data
 
         public static TVShow SaveTVShow(TVShow show)
         {
+            Int32 NewId = GetNewGlobalId("show");
+            
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format(@"INSERT INTO tv_shows (title, tvdbId, collection, studio, contentRating, summary, rating, year, thumb, art, banner, 
-duration, originallyAvailableAt, lastUpdated, location) VALUES ( 
+            cmd.CommandText = String.Format(@"INSERT INTO tv_shows (id, title, tvdbId, collection, studio, contentRating, summary, rating, year, thumb, art, banner, 
+duration, originallyAvailableAt, lastUpdated, location) VALUES (
+                @Id,
                 @Title,
                 @TvdbId,
                 @Collection,
@@ -416,12 +429,13 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
                 @Duration,
                 @AirDate,
                 @LastUpdated,
-                @Location); SELECT last_insert_rowid() AS ShowId;");
+                @Location);");
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = NewId });
             cmd.Parameters.Add("@Title", DbType.AnsiString);
             cmd.Parameters["@Title"].Value = show.Title;
             // TODO
             cmd.Parameters.Add("@TvdbId", DbType.Int32);
-            cmd.Parameters["@TvdbId"].Value = 0;
+            cmd.Parameters["@TvdbId"].Value = show.TvdbId;
             cmd.Parameters.Add("@Collection", DbType.Int32);
             cmd.Parameters["@Collection"].Value = show.Collection;
             cmd.Parameters.Add("@Studio", DbType.String);
@@ -449,25 +463,150 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             cmd.Parameters.Add("@Location", DbType.String);
             cmd.Parameters["@Location"].Value = show.Location;
 
-            show.Id = Convert.ToInt32(cmd.ExecuteScalar());
+            cmd.ExecuteNonQuery();
+            show.Id = NewId;
             return show;
         }
 
         public static TVSeason SaveSeason(TVSeason Season)
         {
+            Int32 NewId = GetNewGlobalId("season");
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format(@"INSERT INTO tv_seasons (seasonNumber, title, showId, art) VALUES ( 
+            cmd.CommandText = String.Format(@"INSERT INTO tv_seasons (id, seasonNumber, title, showId, art) VALUES ( 
+                @Id,
                 @SeasonNumber,
                 @Title,
                 @ShowId,
-                @Art); SELECT last_insert_rowid() AS ShowId;");
+                @Art);");
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = NewId });
             cmd.Parameters.Add(new SQLiteParameter("@SeasonNumber", DbType.Int32) { Value = Season.SeasonNumber });
             cmd.Parameters.Add(new SQLiteParameter("@Title", DbType.String) { Value = Season.Title });
             cmd.Parameters.Add(new SQLiteParameter("@ShowId", DbType.Int32) { Value = Season.ShowId });
             cmd.Parameters.Add(new SQLiteParameter("@Art", DbType.String) { Value = Season.Art });
 
-            Season.Id = Convert.ToInt32(cmd.ExecuteScalar());
+            cmd.ExecuteNonQuery();
+            Season.Id = NewId;
             return Season;
+        }
+
+        public static VideoFileInfo GetVideoFileFromHash(string Hash)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"SELECT * FROM video_files WHERE fileHash = @Hash;");
+            cmd.Parameters.Add(new SQLiteParameter("@Hash", DbType.String) { Value = Hash });
+
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+            DataTable FilesTable = new DataTable();
+            da.Fill(FilesTable);
+
+            if (FilesTable.Rows.Count == 1)
+            {
+                DataRow FileRow = FilesTable.Rows[0];
+                VideoFileInfo VideoFile = GetVideoFile(Convert.ToInt32(FileRow["id"]));
+
+                return VideoFile;
+            }
+            else
+            {
+                return null;
+            }
+
+            
+        }
+
+        public static TVEpisode SaveEpisode(TVEpisode Episode)
+        {
+            Int32 Id = GetNewGlobalId("episode");
+
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"INSERT INTO tv_episodes (id, title, episodeNumber, seasonId, summary, rating, airDate) VALUES ( 
+                @Id,
+                @Title,
+                @episodeNumber,
+                @SeasonId,
+                @Summary,
+                @Rating,
+                @AirDate);");
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.String) { Value = Id });
+            cmd.Parameters.Add(new SQLiteParameter("@Title", DbType.String) { Value = Episode.Title });
+            cmd.Parameters.Add(new SQLiteParameter("@EpisodeNumber", DbType.Int32) { Value = Episode.EpisodeNumber });
+            cmd.Parameters.Add(new SQLiteParameter("@SeasonId", DbType.Int32) { Value = Episode.SeasonId });
+            cmd.Parameters.Add(new SQLiteParameter("@Summary", DbType.String) { Value = Episode.Summary });
+            cmd.Parameters.Add(new SQLiteParameter("@Rating", DbType.Double) { Value = Episode.Rating });
+            cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Episode.AirDate });
+
+            cmd.ExecuteNonQuery();
+            Episode.Id = Id;
+            return Episode;
+        }
+
+        public static VideoFileInfo SaveVideoFile(VideoFileInfo VidFile)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+
+            if (VidFile.Id == 0)
+            {
+                VidFile.Id = GetNewGlobalId("videofile");
+
+                cmd.CommandText = String.Format(@"INSERT INTO video_files (id, duration, bitrate, aspectRatio, audioChannels, audioCodec, videoCodec, videoResolution,
+videoFrameRate, path, size, fileHash) VALUES (
+                @Id,
+                @Duration,
+                @Bitrate,
+                @AspectRatio,
+                @AudioChannels,
+                @AudioCodec,
+                @VideoCodec,
+                @VideoResolution,
+                @VideoFrameRate,
+                @Path,
+                @Size,
+                @FileHash);");
+            }
+            else
+            {
+                cmd.CommandText = String.Format(@"UPDATE video_files SET
+                    duration = @Duration,
+                    bitrate = @Bitrate,
+                    aspectRatio = @AspectRatio,
+                    audioChannels = @AudioChannels,
+                    audioCodec = @AudioCodec,
+                    videoCodec = @VideoCodec,
+                    videoResolution = @VideoResolution,
+                    videoFrameRate = @VideoFrameRate,
+                    path = @Path,
+                    size = @Size,
+                    fileHash = @FileHash
+                    WHERE id = @Id;");
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = VidFile.Id });
+            cmd.Parameters.Add(new SQLiteParameter("@Duration", DbType.Int32) { Value = VidFile.Duration });
+            cmd.Parameters.Add(new SQLiteParameter("@Bitrate", DbType.Int32) { Value = VidFile.Bitrate });
+            cmd.Parameters.Add(new SQLiteParameter("@AspectRatio", DbType.Double) { Value = VidFile.AspectRatio });
+            cmd.Parameters.Add(new SQLiteParameter("@AudioChannels", DbType.Double) { Value = VidFile.AudioChannels });
+            cmd.Parameters.Add(new SQLiteParameter("@AudioCodec", DbType.String) { Value = VidFile.AudioCodec });
+            cmd.Parameters.Add(new SQLiteParameter("@VideoCodec", DbType.String) { Value = VidFile.VideoCodec });
+            cmd.Parameters.Add(new SQLiteParameter("@VideoResolution", DbType.String) { Value = VidFile.VideoResolution });
+            cmd.Parameters.Add(new SQLiteParameter("@VideoFrameRate", DbType.String) { Value = VidFile.VideoFrameRate });
+            cmd.Parameters.Add(new SQLiteParameter("@Path", DbType.String) { Value = VidFile.Path });
+            cmd.Parameters.Add(new SQLiteParameter("@Size", DbType.Int32) { Value = VidFile.Size });
+            cmd.Parameters.Add(new SQLiteParameter("@FileHash", DbType.String) { Value = VidFile.Hash });
+
+            cmd.ExecuteNonQuery();
+            return VidFile;
+        }
+
+        public static Boolean AssocVideoWithEpisode(VideoFileInfo VidFile, TVEpisode Episode)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"INSERT INTO episode2video (episodeId, videoId) VALUES ( 
+                @EpisodeId,
+                @VideoId);");
+            cmd.Parameters.Add(new SQLiteParameter("@EpisodeId", DbType.Int32) { Value = Episode.Id });
+            cmd.Parameters.Add(new SQLiteParameter("@VideoId", DbType.Int32) { Value = VidFile.Id });
+
+            return cmd.ExecuteNonQuery() > 0;
         }
     }
 }

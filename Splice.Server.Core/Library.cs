@@ -332,20 +332,20 @@ namespace Splice.Server
                 // TODO Add Media / Writer / Director tags.
 
                 XmlElement media = doc.CreateElement("Media");
-                media.SetAttribute("id", episode.VideoFile.Id.ToString());
-                media.SetAttribute("duration", episode.VideoFile.Duration.ToString());
-                media.SetAttribute("bitrate", episode.VideoFile.Bitrate.ToString());
-                media.SetAttribute("aspectRatio", episode.VideoFile.AspectRatio.ToString());
-                media.SetAttribute("audioChannels", episode.VideoFile.AudioChannels.ToString());
-                media.SetAttribute("audioCodec", episode.VideoFile.AudioCodec);
-                media.SetAttribute("videoCodec", episode.VideoFile.VideoCodec);
-                media.SetAttribute("videoResolution", episode.VideoFile.VideoResolution);
-                media.SetAttribute("videoFrameRate", episode.VideoFile.VideoFrameRate);
+                //media.SetAttribute("id", episode.VideoFile.Id.ToString());
+                //media.SetAttribute("duration", episode.VideoFile.Duration.ToString());
+                //media.SetAttribute("bitrate", episode.VideoFile.Bitrate.ToString());
+                //media.SetAttribute("aspectRatio", episode.VideoFile.AspectRatio.ToString());
+                //media.SetAttribute("audioChannels", episode.VideoFile.AudioChannels.ToString());
+                //media.SetAttribute("audioCodec", episode.VideoFile.AudioCodec);
+                //media.SetAttribute("videoCodec", episode.VideoFile.VideoCodec);
+                //media.SetAttribute("videoResolution", episode.VideoFile.VideoResolution);
+                //media.SetAttribute("videoFrameRate", episode.VideoFile.VideoFrameRate);
 
                 XmlElement part = doc.CreateElement("Part");
-                part.SetAttribute("key", String.Format("/library/parts/{0}", episode.VideoFile.Id));
-                part.SetAttribute("file", episode.VideoFile.Path);
-                part.SetAttribute("size", episode.VideoFile.Size.ToString());
+                //part.SetAttribute("key", String.Format("/library/parts/{0}", episode.VideoFile.Id));
+                //part.SetAttribute("file", episode.VideoFile.Path);
+                //part.SetAttribute("size", episode.VideoFile.Size.ToString());
 
                 media.AppendChild(part);
                 el.AppendChild(media);
@@ -414,10 +414,10 @@ namespace Splice.Server
             {
                 int PartId = Convert.ToInt32(request.PathSegments[2]);
 
-                VideoFile vidFile = DataAccess.GetVideoFile(PartId);
+                VideoFileInfo vidFile = DataAccess.GetVideoFile(PartId);
 
                 VideoResponse resp = new VideoResponse();
-                resp.FilePath = vidFile.Path;
+//                resp.FilePath = vidFile.Path;
 
                 if (request.Headers["Range"] != null)
                 {

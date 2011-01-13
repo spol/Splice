@@ -14,15 +14,15 @@ namespace Splice.Server.Console
     {
         static void Main(string[] args)
         {
-            const string ServerTestUrl = "http://+:32400/";
-            PlexServer server = new PlexServer(ServerTestUrl);
+            const string ServerUrl = "http://+:32400/";
+            //PlexServer server = new PlexServer(ServerUrl);
 
             ConsoleLogger logger = new ConsoleLogger();
             ConfigurationManager.LoadConfig();
 
             FileSystemScanner fsWatcher = new FileSystemScanner(logger);
             
-            //fsWatcher.ScanAll();
+            fsWatcher.ScanAll();
 
             System.Console.WriteLine("Done. Press any key to exit.");
             System.Console.ReadLine();

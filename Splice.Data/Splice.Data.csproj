@@ -59,6 +59,7 @@
     <Compile Include="TVShow.cs" />
     <Compile Include="VideoCollection.cs" />
     <Compile Include="VideoFile.cs" />
+    <Compile Include="VideoFileInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
