@@ -15,7 +15,7 @@ namespace Splice.Server.Console
         static void Main(string[] args)
         {
             const string ServerUrl = "http://+:32400/";
-            //PlexServer server = new PlexServer(ServerUrl);
+            PlexServer server = new PlexServer(ServerUrl);
 
             ConsoleLogger logger = new ConsoleLogger();
             ConfigurationManager.LoadConfig();

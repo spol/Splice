@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheManager.cs" />
     <Compile Include="DataAccess.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="Filters\AllTVFilter.cs" />

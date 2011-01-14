@@ -233,22 +233,25 @@ namespace Splice.Data
             }
         }
 
-        public static List<TVSeason> GetTVSeasons(TVShow show)
+        public static List<TVSeason> GetTVSeasons(TVShow Show)
         {
-            SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_seasons WHERE showId = " + show.Id.ToString());
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM tv_seasons WHERE showId = @Id ORDER BY seasonNumber > 0 DESC, seasonNumber ASC";
 
-            List<TVSeason> seasons = new List<TVSeason>();
-            while (reader.Read())
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = Show.Id });
+
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+            DataTable SeasonsTable = new DataTable();
+            da.Fill(SeasonsTable);
+
+            List<TVSeason> Seasons = new List<TVSeason>();
+            foreach (DataRow Row in SeasonsTable.Rows)
             {
-                TVSeason season = new TVSeason();
-                season.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                season.Title = reader.GetString(reader.GetOrdinal("title"));
-                season.SeasonNumber = reader.GetInt32(reader.GetOrdinal("seasonNumber"));
-
-                seasons.Add(season);
+                Seasons.Add(new TVSeason(Row));
             }
+            return Seasons;
 
-            return seasons;
         }
 
         public static TVEpisode GetTVEpisode(TVShow Show, TVSeason Season, int EpisodeNumber)
@@ -368,7 +371,6 @@ namespace Splice.Data
             TVSeason season = new TVSeason();
             reader.Read();
             season.Id = seasonId;
-            season.Title = reader.GetString(reader.GetOrdinal("title"));
             season.SeasonNumber = reader.GetInt32(reader.GetOrdinal("seasonNumber"));
             season.ShowId = reader.GetInt32(reader.GetOrdinal("showId"));
 
@@ -394,7 +396,6 @@ namespace Splice.Data
                 TVSeason Season = new TVSeason();
                 Season.Id = Convert.ToInt32(SeasonRow["id"]);
                 Season.SeasonNumber = Convert.ToInt32(SeasonRow["seasonNumber"]);
-                Season.Title = Convert.ToString(SeasonRow["title"] == DBNull.Value ? "" : SeasonRow["title"]);
                 Season.ShowId = Convert.ToInt32(SeasonRow["showId"]);
                 //Season.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
 

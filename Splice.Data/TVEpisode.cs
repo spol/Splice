@@ -24,7 +24,7 @@ namespace Splice.Data
                 {
                     TotalDuration += File.Duration;
                 }
-                return Duration;
+                return TotalDuration;
             }
         }
         public DateTime AirDate { get; set; }

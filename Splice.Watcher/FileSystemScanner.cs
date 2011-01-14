@@ -80,8 +80,8 @@ namespace Splice.Watcher
                     Reporting.Log("Matched: " + series.SeriesName);
                     show = new TVShow();
                     show.Collection = collection.Id;
-                    show.Art = series.FanartPath;
-                    show.Banner = series.BannerPath;
+                    //show.Art = series.FanartPath;
+                    //show.Banner = series.BannerPath;
                     show.ContentRating = series.ContentRating;
                     show.Duration = Convert.ToInt32(series.Runtime);
                     show.LastUpdated = DateTime.Now.Timestamp();
@@ -91,11 +91,18 @@ namespace Splice.Watcher
                     show.Rating = series.Rating;
                     show.Studio = series.Network;
                     show.Summary = series.Overview;
-                    show.Thumb = series.PosterPath;
                     show.Title = series.SeriesName;
                     show.ViewedLeafCount = 0;
                     show.TvdbId = series.Id;
 
+
+                    show = DataAccess.SaveTVShow(show);
+
+                    show.Thumb = CacheManager.SaveArtwork(show.Id, series.PosterPath);
+                    show.Art = CacheManager.SaveArtwork(show.Id, series.FanartPath);
+                    show.Banner = CacheManager.SaveArtwork(show.Id, series.BannerPath);
+
+                    // resave with Artwork
                     show = DataAccess.SaveTVShow(show);
                 }
 
@@ -241,7 +248,6 @@ namespace Splice.Watcher
                 Season = new TVSeason()
                 {
                     SeasonNumber = SeasonNumber,
-                    Title = "",
                     ShowId = Show.Id,
                     Art = ""
                 };
