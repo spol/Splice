@@ -15,7 +15,7 @@ namespace Splice.Data
         {
             get
             {
-                string Cache = ConfigurationManager.AppConfigPath + "/cache/";
+                string Cache = ConfigurationManager.AppConfigPath + "cache\\";
                 if (!Directory.Exists(Cache))
                 {
                     Directory.CreateDirectory(Cache);
@@ -23,25 +23,23 @@ namespace Splice.Data
                 return Cache;
             }
         }
-        public static string SaveArtwork(Int32 EntityId, string Uri)
+        public static string SaveArtwork(Int32 EntityId, string Uri, ArtworkType Type)
         {
-            string EntityPath = CachePath + EntityId.ToString() + "/";
-            if (!Directory.Exists(EntityPath))
+            string SavePath = CachePath + EntityId.ToString() + "\\" + Type.ToString() + "\\";
+            if (!Directory.Exists(SavePath))
             {
-                Directory.CreateDirectory(EntityPath);
+                Directory.CreateDirectory(SavePath);
             }
 
             string Filename = Path.GetFileName(Uri);
-            WebRequest Request = WebRequest.Create(BannerRoot + Uri);
-            WebResponse Response = Request.GetResponse();
-            Stream Stream = Response.GetResponseStream();
+            Uri = BannerRoot + Uri;
 
-            FileStream F = new FileStream(EntityPath + Filename, FileMode.CreateNew);
+            WebClient webClient = new WebClient();
+            webClient.DownloadFile(Uri, SavePath + Filename);
 
-            BinaryWriter Writer = new BinaryWriter(F);
-            StreamReader Reader = new StreamReader(Stream);
-            Writer.Write(Reader.ReadToEnd());
-            return EntityPath + Filename;
+            return SavePath + Filename;
+
+
         }
     }
 }

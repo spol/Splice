@@ -25,9 +25,13 @@ namespace Splice.Watcher
         public void ScanAll()
         {
             Reporting.Log("Scanning...");
-            List<VideoCollection> collections = DataAccess.GetVideoCollections();
+            List<VideoCollection> Collections = DataAccess.GetVideoCollections();
 
-            foreach (VideoCollection collection in collections)
+            if (Collections.Count == 0)
+            {
+                Reporting.Log("No collections defined.");
+            }
+            foreach (VideoCollection collection in Collections)
             {
                 try
                 {
@@ -80,8 +84,6 @@ namespace Splice.Watcher
                     Reporting.Log("Matched: " + series.SeriesName);
                     show = new TVShow();
                     show.Collection = collection.Id;
-                    //show.Art = series.FanartPath;
-                    //show.Banner = series.BannerPath;
                     show.ContentRating = series.ContentRating;
                     show.Duration = Convert.ToInt32(series.Runtime);
                     show.LastUpdated = DateTime.Now.Timestamp();
@@ -98,12 +100,16 @@ namespace Splice.Watcher
 
                     show = DataAccess.SaveTVShow(show);
 
-                    show.Thumb = CacheManager.SaveArtwork(show.Id, series.PosterPath);
-                    show.Art = CacheManager.SaveArtwork(show.Id, series.FanartPath);
-                    show.Banner = CacheManager.SaveArtwork(show.Id, series.BannerPath);
+                    show.Thumb = CacheManager.SaveArtwork(show.Id, series.PosterPath, ArtworkType.Poster);
+                    show.Art = CacheManager.SaveArtwork(show.Id, series.FanartPath, ArtworkType.Fanart);
+                    show.Banner = CacheManager.SaveArtwork(show.Id, series.BannerPath, ArtworkType.Banner);
 
                     // resave with Artwork
                     show = DataAccess.SaveTVShow(show);
+                }
+                else
+                {
+                    // TODO: Check for updates/artwork.
                 }
 
                 // Show already in DB
@@ -118,13 +124,10 @@ namespace Splice.Watcher
             string[] VideoPaths = Directory.GetFiles(Show.Location, "*.*", SearchOption.AllDirectories);
 
             List<VideoFileInfo> Videos = new List<VideoFileInfo>();
-//            Reporting.Log(VideoPaths.Length.ToString());
             foreach (string VidPath in VideoPaths)
             {
                 if (!ConfigurationManager.CurrentConfiguration.VideoExtensions.Contains(new FileInfo(VidPath).Extension.Trim('.')))
                 {
-                    //Reporting.Log("Skipping: " + VidPath);
-                    //Reporting.Log(new FileInfo(VidPath).Extension.Trim('.'));
                     continue;
                 }
                 
@@ -156,7 +159,6 @@ namespace Splice.Watcher
                     int EpisodeNumber = -1;
                     foreach (string Regex in ConfigurationManager.CurrentConfiguration.TVRegexes)
                     {
-//                        Reporting.Log(Regex);
                         Regex R = new Regex(Regex);
                         Match M = R.Match(RelativePath);
                         if (M.Success)
@@ -192,7 +194,8 @@ namespace Splice.Watcher
                         // insert season if not present.
                         Season = new TVSeason() { SeasonNumber = SeasonNumber, ShowId = Show.Id };
                         Season = DataAccess.SaveSeason(Season);
-                        //ODO: Fetch and save artwork for season.
+
+                        // TODO: Fetch and save artwork for season.
                     }
 
                     // check for presence of episode
@@ -219,7 +222,8 @@ namespace Splice.Watcher
                         };
                         Episode = DataAccess.SaveEpisode(Episode);
 
-                        // TODO: Save artwork for episode.
+                        Episode.BannerPath = CacheManager.SaveArtwork(Episode.Id, TvdbEp.BannerPath, ArtworkType.Banner);
+                        DataAccess.SaveEpisode(Episode);
                     }
 
                     // save video file

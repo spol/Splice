@@ -9,7 +9,8 @@ namespace Splice.Data
     {
         public string Art
         {
-            get { return "/resources/show-fanart.jpg"; }
+            get;
+            set;
         }
 
         public string Title { get; set; }

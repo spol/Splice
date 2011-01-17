@@ -32,7 +32,6 @@ namespace Splice.Server
                 }
                 else
                 {
-                    // TODO: 404;
                     resp = XmlResponse.NotFound();
                 }
             }

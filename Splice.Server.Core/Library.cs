@@ -95,7 +95,7 @@ namespace Splice.Server
                 directory.SetAttribute("key", collection.Id.ToString());
                 directory.SetAttribute("type", collection.Type);
                 directory.SetAttribute("title", collection.Title);
-                directory.SetAttribute("art", collection.Art);
+                directory.SetAttribute("art", String.Format("/resources/{0}/art", collection.Id));
                 root.AppendChild(directory);
             }
 
@@ -127,7 +127,7 @@ namespace Splice.Server
             //viewMode="65592" 
             root.SetAttribute("viewMode", "65592");
             //art="/:/resources/show-fanart.jpg" 
-            root.SetAttribute("art", "/resources/show-fanart.jpg");
+            root.SetAttribute("art", String.Format("/resources/{0}/art", collection.Id));
             //identifier="com.plexapp.plugins.library"
             root.SetAttribute("identifier", "com.plexapps.plugins.library");
             //title1="TV Shows"
@@ -191,9 +191,12 @@ namespace Splice.Server
                     el.SetAttribute("summary", show.Summary);
                     el.SetAttribute("rating", show.Rating.ToString());
                     el.SetAttribute("year", show.Year.ToString());
-                    el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", show.Id, show.LastUpdated));
-                    el.SetAttribute("art", String.Format("/library/metadata/{0}/art?t={1}", show.Id, show.LastUpdated));
-                    el.SetAttribute("banner", String.Format("/library/metadata/{0}/banner?t={1}", show.Id, show.LastUpdated));
+                    //el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", show.Id, show.LastUpdated));
+                    //el.SetAttribute("art", String.Format("/library/metadata/{0}/art?t={1}", show.Id, show.LastUpdated));
+                    //el.SetAttribute("banner", String.Format("/library/metadata/{0}/banner?t={1}", show.Id, show.LastUpdated));
+                    el.SetAttribute("thumb", String.Format("/resources/{0}/thumb/{1}", show.Id, show.LastUpdated));
+                    el.SetAttribute("art", String.Format("/resources/{0}/art/{1}", show.Id, show.LastUpdated));
+                    el.SetAttribute("banner", String.Format("/resources/{0}/banner/{1}", show.Id, show.LastUpdated));
                     el.SetAttribute("duration", show.Duration.ToString());
                     el.SetAttribute("originallyAvailableAt", show.OriginallyAvailableAt.ToShortDateString());
                     el.SetAttribute("leafCount", show.LeafCount.ToString());
@@ -323,8 +326,7 @@ namespace Splice.Server
                 el.SetAttribute("title", episode.Title);
                 el.SetAttribute("summary", episode.Summary);
                 el.SetAttribute("index", episode.EpisodeNumber.ToString());
-                // TODO format rating to 1dp.
-                el.SetAttribute("rating", episode.Rating.ToString());
+                el.SetAttribute("rating", episode.Rating.ToString("F1"));
                 el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", episode.Id, episode.LastUpdated));
                 el.SetAttribute("duration", episode.Duration.ToString());
                 el.SetAttribute("originallyAvailableAt", episode.AirDate.ToShortDateString());

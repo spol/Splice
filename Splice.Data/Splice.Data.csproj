@@ -49,12 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Artwork.cs" />
     <Compile Include="CacheManager.cs" />
     <Compile Include="DataAccess.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="Filters\AllTVFilter.cs" />
     <Compile Include="MediaFileInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpliceEntity.cs" />
     <Compile Include="TVEpisode.cs" />
     <Compile Include="TVSeason.cs" />
     <Compile Include="TVShow.cs" />

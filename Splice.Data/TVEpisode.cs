@@ -15,6 +15,7 @@ namespace Splice.Data
         public string Summary { get; set; }
         public Int32 EpisodeNumber { get; set; }
         public double Rating { get; set; }
+        public string BannerPath { get; set; }
         public Int32 Duration
         {
             get

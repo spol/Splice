@@ -66,6 +66,31 @@ namespace Splice.Data
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
+        public static SpliceEntityType GetEntityType(Int32 Id)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"SELECT type FROM global_ids WHERE id = @Id;");
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = Id });
+
+            string Type = cmd.ExecuteScalar().ToString();
+
+            switch (Type)
+            {
+                case "collection":
+                    return SpliceEntityType.Collection;
+                case "show":
+                    return SpliceEntityType.TVShow;
+                case "season":
+                    return SpliceEntityType.TVSeason;
+                case "episode":
+                    return SpliceEntityType.TVEpisode;
+                case "movie":
+                    return SpliceEntityType.Movie;
+                default:
+                    throw new Exception("Unknown entity Type");
+            }
+        }
+
         public static List<VideoCollection> GetVideoCollections()
         {
             List<VideoCollection> collections = new List<VideoCollection>();
@@ -87,6 +112,7 @@ namespace Splice.Data
                     collection.Type = collectionRow["type"].ToString();
                     collection.Title = collectionRow["title"].ToString();
                     collection.Root = collectionRow["root"].ToString();
+                    collection.Art = collectionRow["art"].ToString();
 
                     collections.Add(collection);
                 }
@@ -117,6 +143,7 @@ namespace Splice.Data
                     collection.Type = collectionRow["type"].ToString();
                     collection.Title = collectionRow["title"].ToString();
                     collection.Root = collectionRow["root"].ToString();
+                    collection.Art = collectionRow["art"].ToString();
                     return collection;
                 }
             }
@@ -408,12 +435,15 @@ namespace Splice.Data
 
         }
 
-        public static TVShow SaveTVShow(TVShow show)
+        public static TVShow SaveTVShow(TVShow Show)
         {
-            Int32 NewId = GetNewGlobalId("show");
-            
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format(@"INSERT INTO tv_shows (id, title, tvdbId, collection, studio, contentRating, summary, rating, year, thumb, art, banner, 
+
+            if (Show.Id == 0)
+            {
+                Show.Id = GetNewGlobalId("show");
+
+                cmd.CommandText = String.Format(@"INSERT INTO tv_shows (id, title, tvdbId, collection, studio, contentRating, summary, rating, year, thumb, art, banner, 
 duration, originallyAvailableAt, lastUpdated, location) VALUES (
                 @Id,
                 @Title,
@@ -431,42 +461,46 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
                 @AirDate,
                 @LastUpdated,
                 @Location);");
-            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = NewId });
-            cmd.Parameters.Add("@Title", DbType.AnsiString);
-            cmd.Parameters["@Title"].Value = show.Title;
-            // TODO
-            cmd.Parameters.Add("@TvdbId", DbType.Int32);
-            cmd.Parameters["@TvdbId"].Value = show.TvdbId;
-            cmd.Parameters.Add("@Collection", DbType.Int32);
-            cmd.Parameters["@Collection"].Value = show.Collection;
-            cmd.Parameters.Add("@Studio", DbType.String);
-            cmd.Parameters["@Studio"].Value = show.Studio;
-            cmd.Parameters.Add("@ContentRating", DbType.AnsiString);
-            cmd.Parameters["@ContentRating"].Value = show.ContentRating;
-            cmd.Parameters.Add("@Summary", DbType.String);
-            cmd.Parameters["@Summary"].Value = show.Summary;
-            cmd.Parameters.Add("@Rating", DbType.Double);
-            cmd.Parameters["@Rating"].Value = show.Rating;
-            cmd.Parameters.Add("@Year", DbType.Int32);
-            cmd.Parameters["@Year"].Value = show.Year;
-            cmd.Parameters.Add("@Thumb", DbType.String);
-            cmd.Parameters["@Thumb"].Value = show.Thumb;
-            cmd.Parameters.Add("@Art", DbType.String);
-            cmd.Parameters["@Art"].Value = show.Art;
-            cmd.Parameters.Add("@Banner", DbType.String);
-            cmd.Parameters["@Banner"].Value = show.Banner;
-            cmd.Parameters.Add("@Duration", DbType.Int32);
-            cmd.Parameters["@Duration"].Value = show.Duration;
-            cmd.Parameters.Add("@AirDate", DbType.DateTime);
-            cmd.Parameters["@AirDate"].Value = show.OriginallyAvailableAt;
-            cmd.Parameters.Add("@LastUpdated", DbType.Int32);
-            cmd.Parameters["@LastUpdated"].Value = show.LastUpdated;
-            cmd.Parameters.Add("@Location", DbType.String);
-            cmd.Parameters["@Location"].Value = show.Location;
+            }
+            else
+            {
+                cmd.CommandText = String.Format(@"UPDATE tv_shows SET
+                    title = @Title,
+                    tvdbId = @TvdbId,
+                    collection = @Collection,
+                    studio = @Studio,
+                    contentRating = @ContentRating,
+                    summary = @Summary,
+                    rating = @Rating,
+                    year = @Year,
+                    thumb = @Thumb,
+                    art = @Art,
+                    banner = @Banner, 
+                    duration = @Duration, 
+                    originallyAvailableAt = @AirDate,
+                    lastUpdated = @LastUpdated,
+                    location = @Location
+                    WHERE id = @Id;");
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = Show.Id });
+            cmd.Parameters.Add(new SQLiteParameter("@Title", DbType.String) { Value = Show.Title });
+            cmd.Parameters.Add(new SQLiteParameter("@TvdbId", DbType.Int32) { Value = Show.TvdbId });
+            cmd.Parameters.Add(new SQLiteParameter("@Collection", DbType.Int32) { Value = Show.Collection });
+            cmd.Parameters.Add(new SQLiteParameter("@Studio", DbType.String) { Value = Show.Studio });
+            cmd.Parameters.Add(new SQLiteParameter("@ContentRating", DbType.String) { Value = Show.ContentRating });
+            cmd.Parameters.Add(new SQLiteParameter("@Summary", DbType.String) { Value = Show.Summary });
+            cmd.Parameters.Add(new SQLiteParameter("@Rating", DbType.Double) { Value = Show.Rating });
+            cmd.Parameters.Add(new SQLiteParameter("@Year", DbType.Int32) { Value = Show.Year });
+            cmd.Parameters.Add(new SQLiteParameter("@Thumb", DbType.String) { Value = Show.Thumb });
+            cmd.Parameters.Add(new SQLiteParameter("@Art", DbType.String) { Value = Show.Art });
+            cmd.Parameters.Add(new SQLiteParameter("@Banner", DbType.String) { Value = Show.Banner });
+            cmd.Parameters.Add(new SQLiteParameter("@Duration", DbType.Int32) { Value = Show.Duration });
+            cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Show.OriginallyAvailableAt });
+            cmd.Parameters.Add(new SQLiteParameter("@LastUpdated", DbType.Int32) { Value = Show.LastUpdated });
+            cmd.Parameters.Add(new SQLiteParameter("@Location", DbType.String) { Value = Show.Location });
 
             cmd.ExecuteNonQuery();
-            show.Id = NewId;
-            return show;
+            return Show;
         }
 
         public static TVSeason SaveSeason(TVSeason Season)
@@ -518,18 +552,33 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
 
         public static TVEpisode SaveEpisode(TVEpisode Episode)
         {
-            Int32 Id = GetNewGlobalId("episode");
-
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format(@"INSERT INTO tv_episodes (id, title, episodeNumber, seasonId, summary, rating, airDate) VALUES ( 
-                @Id,
-                @Title,
-                @episodeNumber,
-                @SeasonId,
-                @Summary,
-                @Rating,
-                @AirDate);");
-            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.String) { Value = Id });
+
+            if (Episode.Id == 0)
+            {
+                Episode.Id = GetNewGlobalId("episode");
+
+                cmd.CommandText = String.Format(@"INSERT INTO tv_episodes (id, title, episodeNumber, seasonId, summary, rating, airDate) VALUES ( 
+                    @Id,
+                    @Title,
+                    @EpisodeNumber,
+                    @SeasonId,
+                    @Summary,
+                    @Rating,
+                    @AirDate);");
+            }
+            else {
+                cmd.CommandText = String.Format(@"UPDATE tv_episodes SET
+                        title = @Title,
+                        episodeNumber = @EpisodeNumber,
+                        seasonId = @SeasonId,
+                        summary = @Summary,
+                        rating = @Rating,
+                        airDate = @AirDate
+                    WHERE
+                        id = @Id;");
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.String) { Value = Episode.Id });
             cmd.Parameters.Add(new SQLiteParameter("@Title", DbType.String) { Value = Episode.Title });
             cmd.Parameters.Add(new SQLiteParameter("@EpisodeNumber", DbType.Int32) { Value = Episode.EpisodeNumber });
             cmd.Parameters.Add(new SQLiteParameter("@SeasonId", DbType.Int32) { Value = Episode.SeasonId });
@@ -538,7 +587,6 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Episode.AirDate });
 
             cmd.ExecuteNonQuery();
-            Episode.Id = Id;
             return Episode;
         }
 
