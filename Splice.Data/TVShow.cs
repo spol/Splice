@@ -29,19 +29,5 @@ namespace Splice.Data
         public int TvdbId { get; set; }
         // Index?
 
-        public string GetMedia(string mediaType)
-        {
-            switch (mediaType.ToLower())
-            {
-                case "thumb":
-                    return Thumb;
-                case "art":
-                    return Art;
-                case "banner":
-                    return Banner;
-                default:
-                    throw new Exception("Invalid media type.");
-            }
-        }
     }
 }

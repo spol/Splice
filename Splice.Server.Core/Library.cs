@@ -231,38 +231,38 @@ namespace Splice.Server
                 int id = Convert.ToInt32(request.PathSegments[2]);
                 return GetMetaDataChildren(id, request);
             }
-            else if (request.PathSegments.Length == 4 && (request.PathSegments[3] == "art" || request.PathSegments[3] == "thumb" || request.PathSegments[3] == "banner"))
-            {
-                int id = Convert.ToInt32(request.PathSegments[2]);
-                string type = request.PathSegments[3];
-                return GetMetaDataMedia(id, type);
-            }
+            //else if (request.PathSegments.Length == 4 && (request.PathSegments[3] == "art" || request.PathSegments[3] == "thumb" || request.PathSegments[3] == "banner"))
+            //{
+            //    int id = Convert.ToInt32(request.PathSegments[2]);
+            //    string type = request.PathSegments[3];
+            //    return GetMetaDataMedia(id, type);
+            //}
             else
             {
                 return XmlResponse.NotFound();
             }
         }
 
-        private PlexResponse GetMetaDataMedia(int id, string mediaType)
-        {
-            string entityType = DataAccess.GetType(id);
-            switch (entityType)
-            {
-                case "show":
-                    TVShow show = DataAccess.GetTVShow(id);
-                    if (show.GetMedia(mediaType).Length == 0)
-                    {
-                        return XmlResponse.NotFound();
-                    }
-                    else {
-                        ImageResponse resp = new ImageResponse();
-                        resp.FilePath = show.GetMedia(mediaType);
-                        return resp;
-                    }
-                default:
-                    return XmlResponse.NotFound();
-            }
-        }
+        //private PlexResponse GetMetaDataMedia(int id, string mediaType)
+        //{
+        //    string entityType = DataAccess.GetType(id);
+        //    switch (entityType)
+        //    {
+        //        case "show":
+        //            TVShow show = DataAccess.GetTVShow(id);
+        //            if (show.GetMedia(mediaType).Length == 0)
+        //            {
+        //                return XmlResponse.NotFound();
+        //            }
+        //            else {
+        //                ImageResponse resp = new ImageResponse();
+        //                resp.FilePath = show.GetMedia(mediaType);
+        //                return resp;
+        //            }
+        //        default:
+        //            return XmlResponse.NotFound();
+        //    }
+        //}
 
         private PlexResponse GetMetaData(int id, PlexRequest request)
         {
@@ -305,12 +305,12 @@ namespace Splice.Server
             // Unsure about this one. Possibly position in order from previous level.
             root.SetAttribute("parentIndex", "1");
             root.SetAttribute("parentTitle", "");
-            root.SetAttribute("thumb", show.Thumb);
+            root.SetAttribute("thumb", String.Format("/resources/{0}/thumb", show.Id));
             root.SetAttribute("viewGroup", "episode");
             root.SetAttribute("viewMode", "65592");
             root.SetAttribute("key", season.Id.ToString());
-            root.SetAttribute("banner", show.Banner);
-            root.SetAttribute("art", show.Art);
+            root.SetAttribute("banner", String.Format("/resources/{0}/banner", show.Id));
+            root.SetAttribute("art", String.Format("/resources/{0}/art", show.Id));
             root.SetAttribute("title1", show.Title);
             root.SetAttribute("title2", season.Title);
             root.SetAttribute("identifier", "com.plexapp.plugins.library");
@@ -327,7 +327,7 @@ namespace Splice.Server
                 el.SetAttribute("summary", episode.Summary);
                 el.SetAttribute("index", episode.EpisodeNumber.ToString());
                 el.SetAttribute("rating", episode.Rating.ToString("F1"));
-                el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", episode.Id, episode.LastUpdated));
+                el.SetAttribute("thumb", String.Format("/resources/{0}/thumb/{1}", episode.Id, episode.LastUpdated));
                 el.SetAttribute("duration", episode.Duration.ToString());
                 el.SetAttribute("originallyAvailableAt", episode.AirDate.ToShortDateString());
 
@@ -379,23 +379,23 @@ namespace Splice.Server
             root.SetAttribute("viewGroup", "seasons");
             root.SetAttribute("viewMode", "65593");
             root.SetAttribute("key", show.Id.ToString());
-            root.SetAttribute("art", show.Art);
+            root.SetAttribute("art", String.Format("/resources/{0}/art", show.Id));
             root.SetAttribute("title1", collection.Title);
             root.SetAttribute("title2", show.Title);
             root.SetAttribute("identifier", "com.plexapp.plugins.library");
             doc.AppendChild(root);
 
-            foreach (TVSeason season in seasons)
+            foreach (TVSeason Season in seasons)
             {
                 XmlElement el = doc.CreateElement("Directory");
 
-                el.SetAttribute("ratingKey", season.Id.ToString());
-                el.SetAttribute("key", String.Format("/library/metadata/{0}/children", season.Id));
+                el.SetAttribute("ratingKey", Season.Id.ToString());
+                el.SetAttribute("key", String.Format("/library/metadata/{0}/children", Season.Id));
                 el.SetAttribute("type", "season");
-                el.SetAttribute("title", season.Title);
+                el.SetAttribute("title", Season.Title);
                 el.SetAttribute("summary", "");
                 el.SetAttribute("index", "1");
-                el.SetAttribute("thumb", "");
+                el.SetAttribute("thumb", String.Format("/resources/{0}/thumb", Season.Id));
                 el.SetAttribute("leafCount", "0");
                 el.SetAttribute("viewedLeafCount", "0");
 

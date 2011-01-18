@@ -246,7 +246,7 @@ namespace Splice.Watcher
                         };
                         Episode = DataAccess.SaveEpisode(Episode);
 
-                        Episode.BannerPath = CacheManager.SaveArtwork(Episode.Id, TvdbEp.BannerPath, ArtworkType.Banner);
+                        Episode.Thumb = CacheManager.SaveArtwork(Episode.Id, TvdbEp.BannerPath, ArtworkType.Banner);
                         DataAccess.SaveEpisode(Episode);
                     }
 

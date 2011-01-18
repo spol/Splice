@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace Splice.Data
         public string Summary { get; set; }
         public Int32 EpisodeNumber { get; set; }
         public double Rating { get; set; }
-        public string BannerPath { get; set; }
+        public string Thumb { get; set; }
         public Int32 Duration
         {
             get
@@ -31,5 +32,23 @@ namespace Splice.Data
         public DateTime AirDate { get; set; }
         public Int32 LastUpdated { get { return 1; } }
         public List<VideoFileInfo> VideoFiles { get; set; }
+
+        public TVEpisode()
+        {
+            VideoFiles = new List<VideoFileInfo>();
+        }
+
+        public TVEpisode(DataRow Row)
+        {
+            AirDate = Convert.ToDateTime(Row["airDate"]);
+            EpisodeNumber = Convert.ToInt32(Row["episodeNumber"]);
+            Id = Convert.ToInt32(Row["id"]);
+            Rating = Convert.ToSingle(Row["rating"]);
+            SeasonId = Convert.ToInt32(Row["seasonId"]);
+            Summary = Row["Summary"].ToString();
+            Title = Row["title"].ToString();
+            Thumb = Row["thumb"].ToString();
+            VideoFiles = new List<VideoFileInfo>();
+        }
     }
 }

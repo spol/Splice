@@ -294,24 +294,33 @@ namespace Splice.Data
             DataTable EpisodeTable = new DataTable();
             da.Fill(EpisodeTable);
 
-            if (EpisodeTable.Rows.Count == 1)
+            if (EpisodeTable.Rows.Count >= 1)
             {
                 DataRow Row = EpisodeTable.Rows[0];
-                TVEpisode Episode = new TVEpisode()
-                {
-                    AirDate = Convert.ToDateTime(Row["airDate"]),
-                    //Duration = Convert.ToInt32(Row["duration"]),
-                    EpisodeNumber = EpisodeNumber,
-                    Id = Convert.ToInt32(Row["id"]),
-                    Rating = Convert.ToSingle(Row["rating"]),
-                    SeasonId = Season.Id,
-                    Summary = Row["Summary"].ToString(),
-                    Title = Row["title"].ToString(),
-                    //VideoFile = new VideoFile()
-                    //{
-                    //    Path = Row["path"].ToString()
-                    //}
-                };
+                TVEpisode Episode = new TVEpisode(Row);
+
+                return Episode;
+            }
+
+            return null;
+        }
+
+        public static TVEpisode GetTVEpisode(Int32 Id)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM tv_episodes WHERE id = @EpisodeId;";
+
+            cmd.Parameters.Add(new SQLiteParameter("@EpisodeId", DbType.Int32) { Value = Id });
+
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+
+            DataTable EpisodeTable = new DataTable();
+            da.Fill(EpisodeTable);
+
+            if (EpisodeTable.Rows.Count >= 1)
+            {
+                DataRow Row = EpisodeTable.Rows[0];
+                TVEpisode Episode = new TVEpisode(Row);
 
                 return Episode;
             }
@@ -375,7 +384,6 @@ namespace Splice.Data
             cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = FileId });
 
             SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
-
             DataTable VideoFileTable = new DataTable();
             da.Fill(VideoFileTable);
 
@@ -392,16 +400,25 @@ namespace Splice.Data
             }
         }
 
-        public static TVSeason GetTVSeason(int seasonId)
+        public static TVSeason GetTVSeason(int SeasonId)
         {
-            SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_seasons WHERE id = " + seasonId.ToString());
-            TVSeason season = new TVSeason();
-            reader.Read();
-            season.Id = seasonId;
-            season.SeasonNumber = reader.GetInt32(reader.GetOrdinal("seasonNumber"));
-            season.ShowId = reader.GetInt32(reader.GetOrdinal("showId"));
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM tv_seasons WHERE id = @Id";
 
-            return season;
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = SeasonId });
+
+            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+            DataTable SeasonTable = new DataTable();
+            da.Fill(SeasonTable);
+
+            if (SeasonTable.Rows.Count > 0)
+            {
+                return new TVSeason(SeasonTable.Rows[0]);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static TVSeason GetTVSeason(TVShow Show, int SeasonNumber)
@@ -569,14 +586,15 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             {
                 Episode.Id = GetNewGlobalId("episode");
 
-                cmd.CommandText = String.Format(@"INSERT INTO tv_episodes (id, title, episodeNumber, seasonId, summary, rating, airDate) VALUES ( 
+                cmd.CommandText = String.Format(@"INSERT INTO tv_episodes (id, title, episodeNumber, seasonId, summary, rating, airDate, thumb) VALUES ( 
                     @Id,
                     @Title,
                     @EpisodeNumber,
                     @SeasonId,
                     @Summary,
                     @Rating,
-                    @AirDate);");
+                    @AirDate,
+                    @Thumb);");
             }
             else {
                 cmd.CommandText = String.Format(@"UPDATE tv_episodes SET
@@ -585,7 +603,8 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
                         seasonId = @SeasonId,
                         summary = @Summary,
                         rating = @Rating,
-                        airDate = @AirDate
+                        airDate = @AirDate,
+                        thumb = @Thumb
                     WHERE
                         id = @Id;");
             }
@@ -596,6 +615,7 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             cmd.Parameters.Add(new SQLiteParameter("@Summary", DbType.String) { Value = Episode.Summary });
             cmd.Parameters.Add(new SQLiteParameter("@Rating", DbType.Double) { Value = Episode.Rating });
             cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Episode.AirDate });
+            cmd.Parameters.Add(new SQLiteParameter("@Thumb", DbType.String) { Value = Episode.Thumb });
 
             cmd.ExecuteNonQuery();
             return Episode;

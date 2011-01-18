@@ -11,6 +11,15 @@ namespace Splice.Server
     {
         public string FilePath { get; set; }
 
+        public ImageResponse()
+        {
+        }
+
+        public ImageResponse(string Path)
+        {
+            FilePath = Path;
+        }
+
         public override void Send(HttpListenerResponse response)
         {
             FileInfo info = new FileInfo(FilePath);

@@ -27,15 +27,40 @@ namespace Splice.Server
                         return HandleTVShowResourceRequest(Id, Request);
                     case SpliceEntityType.TVSeason:
                         return HandleTVSeasonResourceRequest(Id, Request);
+                    case SpliceEntityType.TVEpisode:
+                        return HandleTVEpisodeResourceRequest(Id, Request);
                     default:
                         return XmlResponse.NotFound();
                 }
             }
         }
 
+        private PlexResponse HandleTVEpisodeResourceRequest(int Id, PlexRequest Request)
+        {
+            TVEpisode Episode = DataAccess.GetTVEpisode(Id);
+
+            if (Episode.Thumb == null)
+            {
+                return XmlResponse.NotFound();
+            }
+            else
+            {
+                return new ImageResponse(Episode.Thumb);
+            }
+        }
+
         private PlexResponse HandleTVSeasonResourceRequest(int Id, PlexRequest Request)
         {
-            throw new NotImplementedException();
+            TVSeason Season = DataAccess.GetTVSeason(Id);
+
+            if (Season.Art == null)
+            {
+                return XmlResponse.NotFound();
+            }
+            else
+            {
+                return new ImageResponse(Season.Art);
+            }
         }
 
         private PlexResponse HandleTVShowResourceRequest(int Id, PlexRequest Request)
