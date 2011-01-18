@@ -25,10 +25,17 @@ namespace Splice.Server
                         return HandleCollectionResourceRequest(Id, Request);
                     case SpliceEntityType.TVShow:
                         return HandleTVShowResourceRequest(Id, Request);
+                    case SpliceEntityType.TVSeason:
+                        return HandleTVSeasonResourceRequest(Id, Request);
                     default:
                         return XmlResponse.NotFound();
                 }
             }
+        }
+
+        private PlexResponse HandleTVSeasonResourceRequest(int Id, PlexRequest Request)
+        {
+            throw new NotImplementedException();
         }
 
         private PlexResponse HandleTVShowResourceRequest(int Id, PlexRequest Request)

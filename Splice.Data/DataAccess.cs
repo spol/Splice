@@ -505,22 +505,33 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
 
         public static TVSeason SaveSeason(TVSeason Season)
         {
-            Int32 NewId = GetNewGlobalId("season");
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = String.Format(@"INSERT INTO tv_seasons (id, seasonNumber, title, showId, art) VALUES ( 
+            if (Season.Id == 0)
+            {
+                Season.Id = GetNewGlobalId("season");
+                cmd.CommandText = String.Format(@"INSERT INTO tv_seasons (id, seasonNumber, title, showId, art) VALUES ( 
                 @Id,
                 @SeasonNumber,
                 @Title,
                 @ShowId,
                 @Art);");
-            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = NewId });
+            }
+            else
+            {
+                cmd.CommandText = String.Format(@"UPDATE tv_seasons SET
+                        seasonNumber = @SeasonNumber, 
+                        title = @Title, 
+                        showId = @ShowId, 
+                        art = @Art
+                    WHERE id = @Id;");
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = Season.Id });
             cmd.Parameters.Add(new SQLiteParameter("@SeasonNumber", DbType.Int32) { Value = Season.SeasonNumber });
             cmd.Parameters.Add(new SQLiteParameter("@Title", DbType.String) { Value = Season.Title });
             cmd.Parameters.Add(new SQLiteParameter("@ShowId", DbType.Int32) { Value = Season.ShowId });
             cmd.Parameters.Add(new SQLiteParameter("@Art", DbType.String) { Value = Season.Art });
 
             cmd.ExecuteNonQuery();
-            Season.Id = NewId;
             return Season;
         }
 

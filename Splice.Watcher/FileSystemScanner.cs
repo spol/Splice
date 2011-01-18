@@ -7,6 +7,7 @@ using Splice.Data;
 using Splice.Reporting;
 using TvdbLib;
 using TvdbLib.Data;
+using TvdbLib.Data.Banner;
 using System.Text.RegularExpressions;
 using Splice.Configuration;
 
@@ -192,10 +193,33 @@ namespace Splice.Watcher
                     if (Season == null)
                     {
                         // insert season if not present.
-                        Season = new TVSeason() { SeasonNumber = SeasonNumber, ShowId = Show.Id };
+                        Season = new TVSeason() 
+                        { 
+                            SeasonNumber = SeasonNumber,
+                            ShowId = Show.Id 
+                        };
                         Season = DataAccess.SaveSeason(Season);
 
-                        // TODO: Fetch and save artwork for season.
+                        TvdbDownloader Downloader = new TvdbDownloader(TvdbApiKey);
+
+                        List<TvdbBanner> Banners = Downloader.DownloadBanners(Show.TvdbId);
+                        List<TvdbSeasonBanner> SeasonBanners = new List<TvdbSeasonBanner>();
+
+                        foreach (TvdbBanner Banner in Banners)
+                        {
+                            if (Banner.GetType() == typeof(TvdbSeasonBanner))
+                            {
+                                TvdbSeasonBanner SeasonBanner = (TvdbSeasonBanner)Banner;
+                                if (SeasonBanner.Season == SeasonNumber)
+                                {
+                                    SeasonBanners.Add(SeasonBanner);
+                                }
+                            }
+                        }
+
+                        Season.Art = CacheManager.SaveArtwork(Season.Id, SeasonBanners[0].BannerPath, ArtworkType.Poster);
+
+                        Season = DataAccess.SaveSeason(Season);
                     }
 
                     // check for presence of episode

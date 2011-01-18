@@ -43,6 +43,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TvdbLib, Version=0.8.8.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TvdbLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -61,10 +65,6 @@
     <ProjectReference Include="..\Splice.Reporting\Splice.Reporting.csproj">
       <Project>{6FFF4196-812F-4DC0-86FB-7C4123877E9F}</Project>
       <Name>Splice.Reporting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TvdbLib\TvdbLib.csproj">
-      <Project>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</Project>
-      <Name>TvdbLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

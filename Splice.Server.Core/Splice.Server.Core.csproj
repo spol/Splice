@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{18CA7BC3-E30F-4A29-82A5-CAC56E38A5C0}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -48,6 +48,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="ZeroconfService, Version=0.6.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ZeroconfService.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IController.cs" />
@@ -67,10 +71,6 @@
     <ProjectReference Include="..\Splice.Data\Splice.Data.csproj">
       <Project>{966F1DEB-75E2-4817-AC11-1F79768D568B}</Project>
       <Name>Splice.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ZeroconfService\ZeroconfService.csproj">
-      <Project>{AD5CF7A9-93C4-48DD-ACD8-38DD434F1491}</Project>
-      <Name>ZeroconfService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
