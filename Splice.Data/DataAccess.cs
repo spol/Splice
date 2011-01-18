@@ -178,7 +178,7 @@ namespace Splice.Data
                     show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
                     // TODO.
                     show.LeafCount = 0;
-                    show.OriginallyAvailableAt = Convert.ToDateTime(showRow["originallyAvailableAt"]);
+                    show.AirDate = Convert.ToDateTime(showRow["originallyAvailableAt"]);
                     show.Rating = Convert.ToSingle(showRow["rating"]);
                     show.Studio = showRow["studio"].ToString();
                     show.Summary = showRow["summary"].ToString();
@@ -203,27 +203,16 @@ namespace Splice.Data
 
             SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
-            DataTable showsTable = new DataTable();
-            da.Fill(showsTable);
+            DataTable ShowsTable = new DataTable();
+            da.Fill(ShowsTable);
 
-            if (showsTable.Rows.Count != 1)
+            if (ShowsTable.Rows.Count > 0)
             {
-                return null;
+                return new TVShow(ShowsTable.Rows[0]);
             }
             else
             {
-                DataRow showRow = showsTable.Rows[0];
-                TVShow show = new TVShow();
-                show.Id = id;
-                show.Collection = Convert.ToInt32(showRow["collection"]);
-
-                show.Title = Convert.ToString(showRow["title"]);
-                show.Banner = Convert.ToString(showRow["banner"] == DBNull.Value ? "" : showRow["banner"]);
-                show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
-                show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
-                show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
-
-                return show;
+                return null;
             }
         }
 
@@ -234,29 +223,16 @@ namespace Splice.Data
 
             SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
-            DataTable showsTable = new DataTable();
-            da.Fill(showsTable);
+            DataTable ShowsTable = new DataTable();
+            da.Fill(ShowsTable);
 
-            if (showsTable.Rows.Count != 1)
+            if (ShowsTable.Rows.Count != 1)
             {
                 return null;
             }
             else
             {
-                DataRow showRow = showsTable.Rows[0];
-                TVShow show = new TVShow();
-                show.Id = Convert.ToInt32(showRow["id"]);
-                show.Collection = Convert.ToInt32(showRow["collection"]);
-
-                show.Title = Convert.ToString(showRow["title"]);
-                show.Banner = Convert.ToString(showRow["banner"] == DBNull.Value ? "" : showRow["banner"]);
-                show.Art = Convert.ToString(showRow["art"] == DBNull.Value ? "" : showRow["art"]);
-                show.Thumb = Convert.ToString(showRow["thumb"] == DBNull.Value ? "" : showRow["thumb"]);
-                show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
-                show.Location = showRow["location"].ToString();
-                show.TvdbId = Convert.ToInt32(showRow["tvdbId"]);
-
-                return show;
+                return new TVShow(ShowsTable.Rows[0]);
             }
         }
 
@@ -512,9 +488,9 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             cmd.Parameters.Add(new SQLiteParameter("@Art", DbType.String) { Value = Show.Art });
             cmd.Parameters.Add(new SQLiteParameter("@Banner", DbType.String) { Value = Show.Banner });
             cmd.Parameters.Add(new SQLiteParameter("@Duration", DbType.Int32) { Value = Show.Duration });
-            cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Show.OriginallyAvailableAt });
+            cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Show.AirDate });
             cmd.Parameters.Add(new SQLiteParameter("@LastUpdated", DbType.Int32) { Value = Show.LastUpdated });
-            cmd.Parameters.Add(new SQLiteParameter("@Location", DbType.String) { Value = Show.Location });
+//            cmd.Parameters.Add(new SQLiteParameter("@Location", DbType.String) { Value = Show.Location });
 
             cmd.ExecuteNonQuery();
             return Show;

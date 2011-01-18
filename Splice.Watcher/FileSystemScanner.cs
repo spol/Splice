@@ -90,7 +90,7 @@ namespace Splice.Watcher
                     show.LastUpdated = DateTime.Now.Timestamp();
                     show.LeafCount = 0;
                     show.Location = showDir.FullName;
-                    show.OriginallyAvailableAt = series.FirstAired;
+                    show.AirDate = series.FirstAired;
                     show.Rating = series.Rating;
                     show.Studio = series.Network;
                     show.Summary = series.Overview;

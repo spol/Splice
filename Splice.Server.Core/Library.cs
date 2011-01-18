@@ -198,7 +198,7 @@ namespace Splice.Server
                     el.SetAttribute("art", String.Format("/resources/{0}/art/{1}", show.Id, show.LastUpdated));
                     el.SetAttribute("banner", String.Format("/resources/{0}/banner/{1}", show.Id, show.LastUpdated));
                     el.SetAttribute("duration", show.Duration.ToString());
-                    el.SetAttribute("originallyAvailableAt", show.OriginallyAvailableAt.ToShortDateString());
+                    el.SetAttribute("originallyAvailableAt", show.AirDate.ToShortDateString());
                     el.SetAttribute("leafCount", show.LeafCount.ToString());
                     el.SetAttribute("viewedLeafCount", show.ViewedLeafCount.ToString());
                     root.AppendChild(el);
