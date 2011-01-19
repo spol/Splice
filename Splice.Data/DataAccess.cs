@@ -93,60 +93,69 @@ namespace Splice.Data
 
         public static List<VideoCollection> GetVideoCollections()
         {
-            List<VideoCollection> collections = new List<VideoCollection>();
+            List<VideoCollection> Collections = new List<VideoCollection>();
 
             using (SQLiteCommand cmd = Connection.CreateCommand())
             {
-                cmd.CommandText = @"SELECT * FROM collections";
+                cmd.CommandText = @"SELECT * FROM Collections";
 
                 SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
-                DataTable collectionsTable = new DataTable();
-                da.Fill(collectionsTable);
+                DataTable CollectionsTable = new DataTable();
+                da.Fill(CollectionsTable);
                 
-                foreach (DataRow collectionRow in collectionsTable.Rows)
+                foreach (DataRow Row in CollectionsTable.Rows)
                 {
-                    VideoCollection collection = new VideoCollection();
+                    VideoCollection Collection = new VideoCollection(Row);
+                    Collection.Locations.AddRange(GetVideoCollectionLocations(Collection.Id));
 
-                    collection.Id = Convert.ToInt32(collectionRow["id"]);
-                    collection.Type = collectionRow["type"].ToString();
-                    collection.Title = collectionRow["title"].ToString();
-                    collection.Root = collectionRow["root"].ToString();
-                    collection.Art = collectionRow["art"].ToString();
 
-                    collections.Add(collection);
+                    Collections.Add(Collection);
                 }
             }
-            return collections;
+            return Collections;
         }
 
-        public static VideoCollection GetVideoCollection(int id)
+        public static VideoCollection GetVideoCollection(int CollectionId)
         {
             using (SQLiteCommand cmd = Connection.CreateCommand())
             {
-                cmd.CommandText = String.Format(@"SELECT * FROM collections WHERE id = {0}", id);
+                cmd.CommandText = String.Format(@"SELECT * FROM Collections WHERE id = {0}", CollectionId);
 
                 SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
-                DataTable collectionsTable = new DataTable();
-                da.Fill(collectionsTable);
+                DataTable CollectionsTable = new DataTable();
+                da.Fill(CollectionsTable);
 
-                if (collectionsTable.Rows.Count == 0)
+                if (CollectionsTable.Rows.Count == 0)
                 {
                     return null;
                 }
                 else
                 {
-                    DataRow collectionRow = collectionsTable.Rows[0];
-                    VideoCollection collection = new VideoCollection();
-                    collection.Id = Convert.ToInt32(collectionRow["id"]);
-                    collection.Type = collectionRow["type"].ToString();
-                    collection.Title = collectionRow["title"].ToString();
-                    collection.Root = collectionRow["root"].ToString();
-                    collection.Art = collectionRow["art"].ToString();
-                    return collection;
+                    VideoCollection Collection = new VideoCollection(CollectionsTable.Rows[0]);
+                    Collection.Locations.AddRange(GetVideoCollectionLocations(Collection.Id));
+                    return Collection;
                 }
             }
+        }
+
+        public static List<String> GetVideoCollectionLocations(int CollectionId)
+        {
+            SQLiteCommand Cmd = Connection.CreateCommand();
+            Cmd.CommandText = String.Format(@"SELECT * FROM CollectionLocations WHERE CollectionId = {0}", CollectionId);
+
+            SQLiteDataAdapter DA = new SQLiteDataAdapter(Cmd);
+            DataTable LocationsTable = new DataTable();
+            DA.Fill(LocationsTable);
+
+            List<String> Locations = new List<string>();
+
+            foreach (DataRow Row in LocationsTable.Rows)
+            {
+                Locations.Add(Row["Path"].ToString());
+            }
+            return Locations;
         }
 
         public static List<TVShow> GetTVShows(int collectionId, Filter filter)
@@ -191,10 +200,10 @@ namespace Splice.Data
             return shows;
         }
 
-        public static string GetType(int id)
-        {
-            return (string)GetScalar("SELECT type FROM global_ids WHERE id = " + id.ToString());
-        }
+        //public static string GetType(int id)
+        //{
+        //    return (string)GetScalar("SELECT type FROM global_ids WHERE id = " + id.ToString());
+        //}
 
         public static TVShow GetTVShow(int id)
         {
@@ -330,12 +339,12 @@ namespace Splice.Data
             return episodes;
         }
 
-        public static List<VideoFileInfo> GetVideoFilesForEpisode(int EpisodeNumber)
+        public static List<VideoFileInfo> GetVideoFilesForEpisode(int EpisodeId)
         {
             SQLiteCommand cmd = Connection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM video_files v LEFT JOIN episode2video e2v ON v.id = e2v.videoId WHERE e2v.episodeId = @EpisodeNumber";
+            cmd.CommandText = "SELECT * FROM video_files v LEFT JOIN episode2video e2v ON v.id = e2v.videoId WHERE e2v.episodeId = @EpisodeId";
 
-            cmd.Parameters.Add(new SQLiteParameter("@EpisodeNumber", DbType.Int32) { Value = EpisodeNumber });
+            cmd.Parameters.Add(new SQLiteParameter("@EpisodeId", DbType.Int32) { Value = EpisodeId });
 
             SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
 
@@ -346,7 +355,7 @@ namespace Splice.Data
 
             foreach (DataRow Row in VideoFileTable.Rows)
             {
-                Files.Add(new VideoFileInfo(Row["path"].ToString()));
+                Files.Add(new VideoFileInfo(Row));
             }
 
             return Files;
@@ -490,7 +499,7 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             cmd.Parameters.Add(new SQLiteParameter("@Duration", DbType.Int32) { Value = Show.Duration });
             cmd.Parameters.Add(new SQLiteParameter("@AirDate", DbType.DateTime) { Value = Show.AirDate });
             cmd.Parameters.Add(new SQLiteParameter("@LastUpdated", DbType.Int32) { Value = Show.LastUpdated });
-//            cmd.Parameters.Add(new SQLiteParameter("@Location", DbType.String) { Value = Show.Location });
+            cmd.Parameters.Add(new SQLiteParameter("@Location", DbType.String) { Value = Show.Location });
 
             cmd.ExecuteNonQuery();
             return Show;

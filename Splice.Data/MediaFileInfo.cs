@@ -13,7 +13,7 @@ namespace Splice.Data
 
         public Int32 Id { get; set; }
         public string Filename { get { return System.IO.Path.GetFileName(Path); } }
-        public Int32 Size { get; set; }
+        public Int64 Size { get; set; }
         public string Path { get { return _Filename; } set { _Filename = value; } }
         public Int32 Duration { get; set; }
 

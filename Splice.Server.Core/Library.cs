@@ -93,7 +93,7 @@ namespace Splice.Server
             {
                 XmlElement directory = xml.CreateElement("Directory");
                 directory.SetAttribute("key", collection.Id.ToString());
-                directory.SetAttribute("type", collection.Type);
+                directory.SetAttribute("type", collection.Type.ToString());
                 directory.SetAttribute("title", collection.Title);
                 directory.SetAttribute("art", String.Format("/resources/{0}/art", collection.Id));
                 root.AppendChild(directory);
@@ -151,7 +151,7 @@ namespace Splice.Server
         {
             VideoCollection currentCollection = DataAccess.GetVideoCollection(collectionId);
 
-            if (currentCollection.Type == "show")
+            if (currentCollection.Type == VideoCollectionType.show)
             {
                 Filter currentFilter = Filter.GetTVFilter(filterKey);
 
@@ -269,17 +269,17 @@ namespace Splice.Server
             return XmlResponse.NotFound();
         }
 
-        private PlexResponse GetMetaDataChildren(int id, PlexRequest request)
+        private PlexResponse GetMetaDataChildren(int Id, PlexRequest request)
         {
-            string type = DataAccess.GetType(id);
+            SpliceEntityType Type = DataAccess.GetEntityType(Id);
 
-            if (type == "show")
+            if (Type == SpliceEntityType.TVShow)
             {
-                return GetShowMetaDataChildren(id);
+                return GetShowMetaDataChildren(Id);
             }
-            else if (type == "season")
+            else if (Type == SpliceEntityType.TVSeason)
             {
-                return GetSeasonMetaDataChildren(id);
+                return GetSeasonMetaDataChildren(Id);
             }
             else
             {
@@ -332,25 +332,30 @@ namespace Splice.Server
                 el.SetAttribute("originallyAvailableAt", episode.AirDate.ToShortDateString());
 
                 // TODO Add Media / Writer / Director tags.
+                List<VideoFileInfo> VideoFiles = DataAccess.GetVideoFilesForEpisode(episode.Id);
 
-                XmlElement media = doc.CreateElement("Media");
-                //media.SetAttribute("id", episode.VideoFile.Id.ToString());
-                //media.SetAttribute("duration", episode.VideoFile.Duration.ToString());
-                //media.SetAttribute("bitrate", episode.VideoFile.Bitrate.ToString());
-                //media.SetAttribute("aspectRatio", episode.VideoFile.AspectRatio.ToString());
-                //media.SetAttribute("audioChannels", episode.VideoFile.AudioChannels.ToString());
-                //media.SetAttribute("audioCodec", episode.VideoFile.AudioCodec);
-                //media.SetAttribute("videoCodec", episode.VideoFile.VideoCodec);
-                //media.SetAttribute("videoResolution", episode.VideoFile.VideoResolution);
-                //media.SetAttribute("videoFrameRate", episode.VideoFile.VideoFrameRate);
+                foreach (VideoFileInfo VideoFile in VideoFiles)
+                {
 
-                XmlElement part = doc.CreateElement("Part");
-                //part.SetAttribute("key", String.Format("/library/parts/{0}", episode.VideoFile.Id));
-                //part.SetAttribute("file", episode.VideoFile.Path);
-                //part.SetAttribute("size", episode.VideoFile.Size.ToString());
+                    XmlElement MediaElement = doc.CreateElement("Media");
+                    MediaElement.SetAttribute("id", VideoFile.Id.ToString());
+                    //MediaElement.SetAttribute("duration", episode.VideoFile.Duration.ToString());
+                    //MediaElement.SetAttribute("bitrate", episode.VideoFile.Bitrate.ToString());
+                    //MediaElement.SetAttribute("aspectRatio", episode.VideoFile.AspectRatio.ToString());
+                    //MediaElement.SetAttribute("audioChannels", episode.VideoFile.AudioChannels.ToString());
+                    //MediaElement.SetAttribute("audioCodec", episode.VideoFile.AudioCodec);
+                    //MediaElement.SetAttribute("videoCodec", episode.VideoFile.VideoCodec);
+                    //MediaElement.SetAttribute("videoResolution", episode.VideoFile.VideoResolution);
+                    //MediaElement.SetAttribute("videoFrameRate", episode.VideoFile.VideoFrameRate);
 
-                media.AppendChild(part);
-                el.AppendChild(media);
+                    XmlElement PartElement = doc.CreateElement("Part");
+                    PartElement.SetAttribute("key", String.Format("/library/parts/{0}", VideoFile.Id));
+                    PartElement.SetAttribute("file", VideoFile.Path);
+                    PartElement.SetAttribute("size", VideoFile.Size.ToString());
+
+                    MediaElement.AppendChild(PartElement);
+                    el.AppendChild(MediaElement);
+                }
                 root.AppendChild(el);
             }
             XmlResponse resp = new XmlResponse();
@@ -419,7 +424,7 @@ namespace Splice.Server
                 VideoFileInfo vidFile = DataAccess.GetVideoFile(PartId);
 
                 VideoResponse resp = new VideoResponse();
-//                resp.FilePath = vidFile.Path;
+                resp.FilePath = vidFile.Path;
 
                 if (request.Headers["Range"] != null)
                 {

@@ -49,10 +49,10 @@ namespace Splice.Watcher
         {
             switch (collection.Type)
             {
-                case "show":
+                case VideoCollectionType.show:
                     ScanTVCollection(collection);
                     break;
-                case "movie":
+                case VideoCollectionType.movie:
                     ScanMovieCollection(collection);
                     break;
             }
@@ -63,58 +63,60 @@ namespace Splice.Watcher
             throw new NotImplementedException();
         }
 
-        private void ScanTVCollection(VideoCollection collection)
+        private void ScanTVCollection(VideoCollection Collection)
         {
-            
-            DirectoryInfo dirInfo = new DirectoryInfo(collection.Root);
-
-            if (!dirInfo.Exists)
+            foreach (String Path in Collection.Locations)
             {
-                throw new IOException(String.Format("Collection root doesn't exist. ({0})", collection.Root));
-            }
+                DirectoryInfo dirInfo = new DirectoryInfo(Path);
 
-            DirectoryInfo[] showDirectories = dirInfo.GetDirectories();
-
-            foreach (DirectoryInfo showDir in showDirectories)
-            {
-                TVShow show = DataAccess.GetTVShowFromPath(showDir.FullName);
-                if (show == null)
+                if (!dirInfo.Exists)
                 {
-                    // New Show.
-                    TvdbSeries series = LookupShow(showDir.Name);
-                    Reporting.Log("Matched: " + series.SeriesName);
-                    show = new TVShow();
-                    show.Collection = collection.Id;
-                    show.ContentRating = series.ContentRating;
-                    show.Duration = Convert.ToInt32(series.Runtime);
-                    show.LastUpdated = DateTime.Now.Timestamp();
-                    show.LeafCount = 0;
-                    show.Location = showDir.FullName;
-                    show.AirDate = series.FirstAired;
-                    show.Rating = series.Rating;
-                    show.Studio = series.Network;
-                    show.Summary = series.Overview;
-                    show.Title = series.SeriesName;
-                    show.ViewedLeafCount = 0;
-                    show.TvdbId = series.Id;
-
-
-                    show = DataAccess.SaveTVShow(show);
-
-                    show.Thumb = CacheManager.SaveArtwork(show.Id, series.PosterPath, ArtworkType.Poster);
-                    show.Art = CacheManager.SaveArtwork(show.Id, series.FanartPath, ArtworkType.Fanart);
-                    show.Banner = CacheManager.SaveArtwork(show.Id, series.BannerPath, ArtworkType.Banner);
-
-                    // resave with Artwork
-                    show = DataAccess.SaveTVShow(show);
-                }
-                else
-                {
-                    // TODO: Check for updates/artwork.
+                    throw new IOException(String.Format("Collection location doesn't exist. ({0})", Path));
                 }
 
-                // Show already in DB
-                UpdateShow(show);
+                DirectoryInfo[] showDirectories = dirInfo.GetDirectories();
+
+                foreach (DirectoryInfo showDir in showDirectories)
+                {
+                    TVShow show = DataAccess.GetTVShowFromPath(showDir.FullName);
+                    if (show == null)
+                    {
+                        // New Show.
+                        TvdbSeries series = LookupShow(showDir.Name);
+                        Reporting.Log("Matched: " + series.SeriesName);
+                        show = new TVShow();
+                        show.Collection = Collection.Id;
+                        show.ContentRating = series.ContentRating;
+                        show.Duration = Convert.ToInt32(series.Runtime);
+                        show.LastUpdated = DateTime.Now.Timestamp();
+                        show.LeafCount = 0;
+                        show.Location = showDir.FullName;
+                        show.AirDate = series.FirstAired;
+                        show.Rating = series.Rating;
+                        show.Studio = series.Network;
+                        show.Summary = series.Overview;
+                        show.Title = series.SeriesName;
+                        show.ViewedLeafCount = 0;
+                        show.TvdbId = series.Id;
+
+
+                        show = DataAccess.SaveTVShow(show);
+
+                        show.Thumb = CacheManager.SaveArtwork(show.Id, series.PosterPath, ArtworkType.Poster);
+                        show.Art = CacheManager.SaveArtwork(show.Id, series.FanartPath, ArtworkType.Fanart);
+                        show.Banner = CacheManager.SaveArtwork(show.Id, series.BannerPath, ArtworkType.Banner);
+
+                        // resave with Artwork
+                        show = DataAccess.SaveTVShow(show);
+                    }
+                    else
+                    {
+                        // TODO: Check for updates/artwork.
+                    }
+
+                    // Show already in DB
+                    UpdateShow(show);
+                }
             }
         }
 
@@ -154,7 +156,12 @@ namespace Splice.Watcher
                 else
                 {
                     // new file.
+
+                    // Save filesize
+                    FileInfo Info = new FileInfo(VidFile.Path);
+                    VidFile.Size = Info.Length;
                     string RelativePath = VidPath.Replace(Show.Location, "");
+
 
                     int SeasonNumber = -1;
                     int EpisodeNumber = -1;
