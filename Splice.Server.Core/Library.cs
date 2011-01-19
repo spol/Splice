@@ -191,9 +191,6 @@ namespace Splice.Server
                     el.SetAttribute("summary", show.Summary);
                     el.SetAttribute("rating", show.Rating.ToString());
                     el.SetAttribute("year", show.Year.ToString());
-                    //el.SetAttribute("thumb", String.Format("/library/metadata/{0}/thumb?t={1}", show.Id, show.LastUpdated));
-                    //el.SetAttribute("art", String.Format("/library/metadata/{0}/art?t={1}", show.Id, show.LastUpdated));
-                    //el.SetAttribute("banner", String.Format("/library/metadata/{0}/banner?t={1}", show.Id, show.LastUpdated));
                     el.SetAttribute("thumb", String.Format("/resources/{0}/thumb/{1}", show.Id, show.LastUpdated));
                     el.SetAttribute("art", String.Format("/resources/{0}/art/{1}", show.Id, show.LastUpdated));
                     el.SetAttribute("banner", String.Format("/resources/{0}/banner/{1}", show.Id, show.LastUpdated));
@@ -231,38 +228,11 @@ namespace Splice.Server
                 int id = Convert.ToInt32(request.PathSegments[2]);
                 return GetMetaDataChildren(id, request);
             }
-            //else if (request.PathSegments.Length == 4 && (request.PathSegments[3] == "art" || request.PathSegments[3] == "thumb" || request.PathSegments[3] == "banner"))
-            //{
-            //    int id = Convert.ToInt32(request.PathSegments[2]);
-            //    string type = request.PathSegments[3];
-            //    return GetMetaDataMedia(id, type);
-            //}
             else
             {
                 return XmlResponse.NotFound();
             }
         }
-
-        //private PlexResponse GetMetaDataMedia(int id, string mediaType)
-        //{
-        //    string entityType = DataAccess.GetType(id);
-        //    switch (entityType)
-        //    {
-        //        case "show":
-        //            TVShow show = DataAccess.GetTVShow(id);
-        //            if (show.GetMedia(mediaType).Length == 0)
-        //            {
-        //                return XmlResponse.NotFound();
-        //            }
-        //            else {
-        //                ImageResponse resp = new ImageResponse();
-        //                resp.FilePath = show.GetMedia(mediaType);
-        //                return resp;
-        //            }
-        //        default:
-        //            return XmlResponse.NotFound();
-        //    }
-        //}
 
         private PlexResponse GetMetaData(int id, PlexRequest request)
         {
