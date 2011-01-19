@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{966F1DEB-75E2-4817-AC11-1F79768D568B}</ProjectGuid>
+    <ProjectGuid>{CC26C7F5-7A93-48E6-8398-678AC4C99F39}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Splice.Data</RootNamespace>
-    <AssemblyName>Splice.Data</AssemblyName>
+    <RootNamespace>Splice.MediaInfo</RootNamespace>
+    <AssemblyName>Splice.MediaInfo</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,10 +35,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -49,33 +45,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Artwork.cs" />
-    <Compile Include="CacheManager.cs" />
-    <Compile Include="DataAccess.cs" />
-    <Compile Include="Filter.cs" />
-    <Compile Include="Filters\AllTVFilter.cs" />
-    <Compile Include="MediaFileInfo.cs" />
+    <Compile Include="MediaInfo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpliceEntity.cs" />
-    <Compile Include="TVEpisode.cs" />
-    <Compile Include="TVSeason.cs" />
-    <Compile Include="TVShow.cs" />
-    <Compile Include="VideoCollection.cs" />
-    <Compile Include="VideoFile.cs" />
-    <Compile Include="VideoFileInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Splice.Configuration\Splice.Configuration.csproj">
-      <Project>{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}</Project>
-      <Name>Splice.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Splice.MediaInfo\Splice.MediaInfo.csproj">
-      <Project>{CC26C7F5-7A93-48E6-8398-678AC4C99F39}</Project>
-      <Name>Splice.MediaInfo</Name>
-    </ProjectReference>
+    <Content Include="MediaInfo.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Reporting", "Splice.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.Configuration", "Splice.Configuration\Splice.Configuration.csproj", "{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splice.MediaInfo", "Splice.MediaInfo\Splice.MediaInfo.csproj", "{CC26C7F5-7A93-48E6-8398-678AC4C99F39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,12 @@ Global
 		{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}.Release|x86.ActiveCfg = Release|Any CPU
+		{CC26C7F5-7A93-48E6-8398-678AC4C99F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC26C7F5-7A93-48E6-8398-678AC4C99F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC26C7F5-7A93-48E6-8398-678AC4C99F39}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CC26C7F5-7A93-48E6-8398-678AC4C99F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC26C7F5-7A93-48E6-8398-678AC4C99F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC26C7F5-7A93-48E6-8398-678AC4C99F39}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
