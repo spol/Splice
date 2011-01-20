@@ -1,0 +1,7 @@
+C:\Personal\Splice\code\Splice.MediaInfo\bin\Debug\MediaInfo.dll
+C:\Personal\Splice\code\Splice.MediaInfo\bin\Debug\MediaInfo.cs
+C:\Personal\Splice\code\Splice.MediaInfo\bin\Debug\Splice.MediaInfo.dll
+C:\Personal\Splice\code\Splice.MediaInfo\bin\Debug\Splice.MediaInfo.pdb
+C:\Personal\Splice\code\Splice.MediaInfo\obj\Debug\ResolveAssemblyReference.cache
+C:\Personal\Splice\code\Splice.MediaInfo\obj\Debug\Splice.MediaInfo.dll
+C:\Personal\Splice\code\Splice.MediaInfo\obj\Debug\Splice.MediaInfo.pdb

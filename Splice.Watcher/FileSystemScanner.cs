@@ -258,6 +258,7 @@ namespace Splice.Watcher
                     }
 
                     // save video file
+                    VidFile.LoadMetaDataFromFile();
                     VidFile = DataAccess.SaveVideoFile(VidFile);
 
                     // add video file to episode.

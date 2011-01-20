@@ -309,14 +309,14 @@ namespace Splice.Server
 
                     XmlElement MediaElement = doc.CreateElement("Media");
                     MediaElement.SetAttribute("id", VideoFile.Id.ToString());
-                    //MediaElement.SetAttribute("duration", episode.VideoFile.Duration.ToString());
-                    //MediaElement.SetAttribute("bitrate", episode.VideoFile.Bitrate.ToString());
-                    //MediaElement.SetAttribute("aspectRatio", episode.VideoFile.AspectRatio.ToString());
-                    //MediaElement.SetAttribute("audioChannels", episode.VideoFile.AudioChannels.ToString());
-                    //MediaElement.SetAttribute("audioCodec", episode.VideoFile.AudioCodec);
-                    //MediaElement.SetAttribute("videoCodec", episode.VideoFile.VideoCodec);
-                    //MediaElement.SetAttribute("videoResolution", episode.VideoFile.VideoResolution);
-                    //MediaElement.SetAttribute("videoFrameRate", episode.VideoFile.VideoFrameRate);
+                    MediaElement.SetAttribute("duration", VideoFile.Duration.ToString());
+                    MediaElement.SetAttribute("bitrate", VideoFile.Bitrate.ToString());
+                    MediaElement.SetAttribute("aspectRatio", VideoFile.AspectRatio.ToString());
+                    MediaElement.SetAttribute("audioChannels", VideoFile.AudioChannels.ToString());
+                    MediaElement.SetAttribute("audioCodec", VideoFile.AudioCodec);
+                    MediaElement.SetAttribute("videoCodec", VideoFile.VideoCodec);
+                    MediaElement.SetAttribute("videoResolution", String.Format("{0}x{1}", VideoFile.PictureWidth, VideoFile.PictureHeight));
+                    MediaElement.SetAttribute("videoFrameRate", VideoFile.FrameRate.ToString());
 
                     XmlElement PartElement = doc.CreateElement("Part");
                     PartElement.SetAttribute("key", String.Format("/library/parts/{0}", VideoFile.Id));

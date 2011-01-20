@@ -614,8 +614,8 @@ duration, originallyAvailableAt, lastUpdated, location) VALUES (
             {
                 VidFile.Id = GetNewGlobalId("videofile");
 
-                cmd.CommandText = String.Format(@"INSERT INTO video_files (id, duration, bitrate, aspectRatio, audioChannels, audioCodec, videoCodec, videoResolution,
-videoFrameRate, path, size, fileHash) VALUES (
+                cmd.CommandText = String.Format(@"INSERT INTO video_files (id, duration, bitrate, aspectRatio, audioChannels, audioCodec, videoCodec,
+PictureHeight, PictureWidth, videoFrameRate, path, size, fileHash) VALUES (
                 @Id,
                 @Duration,
                 @Bitrate,
@@ -623,7 +623,8 @@ videoFrameRate, path, size, fileHash) VALUES (
                 @AudioChannels,
                 @AudioCodec,
                 @VideoCodec,
-                @VideoResolution,
+                @PictureHeight,
+                @PictureWidth,
                 @VideoFrameRate,
                 @Path,
                 @Size,
@@ -638,7 +639,8 @@ videoFrameRate, path, size, fileHash) VALUES (
                     audioChannels = @AudioChannels,
                     audioCodec = @AudioCodec,
                     videoCodec = @VideoCodec,
-                    videoResolution = @VideoResolution,
+                    PictureHeight = @PictureHeight,
+                    PictureWidth = @PictureWidth,
                     videoFrameRate = @VideoFrameRate,
                     path = @Path,
                     size = @Size,
@@ -652,8 +654,9 @@ videoFrameRate, path, size, fileHash) VALUES (
             cmd.Parameters.Add(new SQLiteParameter("@AudioChannels", DbType.Double) { Value = VidFile.AudioChannels });
             cmd.Parameters.Add(new SQLiteParameter("@AudioCodec", DbType.String) { Value = VidFile.AudioCodec });
             cmd.Parameters.Add(new SQLiteParameter("@VideoCodec", DbType.String) { Value = VidFile.VideoCodec });
-            cmd.Parameters.Add(new SQLiteParameter("@VideoResolution", DbType.String) { Value = VidFile.VideoResolution });
-            cmd.Parameters.Add(new SQLiteParameter("@VideoFrameRate", DbType.String) { Value = VidFile.VideoFrameRate });
+            cmd.Parameters.Add(new SQLiteParameter("@PictureWidth", DbType.String) { Value = VidFile.PictureWidth });
+            cmd.Parameters.Add(new SQLiteParameter("@PictureHeight", DbType.String) { Value = VidFile.PictureHeight });
+            cmd.Parameters.Add(new SQLiteParameter("@VideoFrameRate", DbType.String) { Value = VidFile.FrameRate });
             cmd.Parameters.Add(new SQLiteParameter("@Path", DbType.String) { Value = VidFile.Path });
             cmd.Parameters.Add(new SQLiteParameter("@Size", DbType.Int32) { Value = VidFile.Size });
             cmd.Parameters.Add(new SQLiteParameter("@FileHash", DbType.String) { Value = VidFile.Hash });
