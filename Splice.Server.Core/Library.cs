@@ -299,7 +299,7 @@ namespace Splice.Server
                 el.SetAttribute("rating", episode.Rating.ToString("F1"));
                 el.SetAttribute("thumb", String.Format("/resources/{0}/thumb/{1}", episode.Id, episode.LastUpdated));
                 el.SetAttribute("duration", episode.Duration.ToString());
-                el.SetAttribute("originallyAvailableAt", episode.AirDate.ToShortDateString());
+                el.SetAttribute("originallyAvailableAt", episode.AirDate.ToString("yyyy-MM-dd"));
 
                 // TODO Add Media / Writer / Director tags.
                 List<VideoFileInfo> VideoFiles = DataAccess.GetVideoFilesForEpisode(episode.Id);
