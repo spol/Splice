@@ -313,30 +313,25 @@ namespace Splice.Data
             return null;
         }
 
-        public static List<TVEpisode> GetTVEpisodes(TVSeason season)
+        public static List<TVEpisode> GetTVEpisodes(TVSeason Season)
         {
-            SQLiteDataReader reader = ExecuteReader("SELECT * FROM tv_episodes WHERE seasonId = " + season.Id.ToString());
+            SQLiteCommand Cmd = Connection.CreateCommand();
+            Cmd.CommandText = "SELECT * FROM tv_episodes WHERE seasonId = @SeasonId;";
+            Cmd.Parameters.Add(new SQLiteParameter("@SeasonId", DbType.Int32) { Value = Season.Id });
 
-            List<TVEpisode> episodes = new List<TVEpisode>();
-            while (reader.Read())
+            SQLiteDataAdapter DA = new SQLiteDataAdapter(Cmd);
+
+            DataTable EpisodesTable = new DataTable();
+            DA.Fill(EpisodesTable);
+
+            List<TVEpisode> Episodes = new List<TVEpisode>();
+            foreach (DataRow Row in EpisodesTable.Rows)
             {
-                TVEpisode episode = new TVEpisode();
-                episode.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                episode.Title = reader.GetString(reader.GetOrdinal("title"));
-                episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
-                episode.SeasonId = reader.GetInt32(reader.GetOrdinal("seasonId"));
-                episode.Rating = reader.GetFloat(reader.GetOrdinal("rating"));
-                episode.Summary = reader.GetString(reader.GetOrdinal("summary"));
-                //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
-                //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
-                //episode.EpisodeNumber = reader.GetInt32(reader.GetOrdinal("episodeNumber"));
-
-                episode.VideoFiles = DataAccess.GetVideoFilesForEpisode(episode.Id);
-
-                episodes.Add(episode);
+                TVEpisode Episode = new TVEpisode(Row);
+                Episode.VideoFiles = DataAccess.GetVideoFilesForEpisode(Episode.Id);
+                Episodes.Add(Episode);
             }
-
-            return episodes;
+            return Episodes;
         }
 
         public static List<VideoFileInfo> GetVideoFilesForEpisode(int EpisodeId)

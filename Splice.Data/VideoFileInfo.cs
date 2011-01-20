@@ -23,6 +23,7 @@ namespace Splice.Data
         public VideoFileInfo(DataRow Row) : base(Row)
         {
             Bitrate = Convert.ToInt32(Row["bitrate"]);
+            Duration = Convert.ToInt32(Row["duration"]);
             AspectRatio = Convert.ToDouble(Row["aspectRatio"]);
             AudioChannels = Convert.ToDouble(Row["audioChannels"]);
             AudioCodec = Row["audioCodec"].ToString();
