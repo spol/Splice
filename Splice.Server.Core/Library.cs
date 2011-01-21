@@ -257,52 +257,56 @@ namespace Splice.Server
             }
         }
 
-        private PlexResponse GetSeasonMetaDataChildren(int seasonId)
+        private PlexResponse GetSeasonMetaDataChildren(int SeasonId)
         {
-            TVSeason season = DataAccess.GetTVSeason(seasonId);
-            TVShow show = DataAccess.GetTVShow(season.ShowId);
-            List<TVEpisode> episodes = DataAccess.GetTVEpisodes(season);
+            TVSeason Season = DataAccess.GetTVSeason(SeasonId);
+            TVShow Show = DataAccess.GetTVShow(Season.ShowId);
+            List<TVEpisode> Episodes = DataAccess.GetTVEpisodes(Season);
 
             XmlDocument doc = new XmlDocument();
-            XmlElement root = doc.CreateElement("MediaContainer");
-            root.SetAttribute("size", episodes.Count.ToString());
-            root.SetAttribute("grandparentContentRating", show.ContentRating);
-            root.SetAttribute("grandparentStudio", show.Studio);
-            root.SetAttribute("grandparentTitle", show.Title);
-            root.SetAttribute("mediaTagPrefix", "/system/bundle/media/flags/");
-            root.SetAttribute("mediaTagVersion", "1283229604");
-            root.SetAttribute("nocache", "1");
-            // Unsure about this one. Possibly position in order from previous level.
-            root.SetAttribute("parentIndex", "1");
-            root.SetAttribute("parentTitle", "");
-            root.SetAttribute("thumb", String.Format("/resources/{0}/thumb", show.Id));
-            root.SetAttribute("viewGroup", "episode");
-            root.SetAttribute("viewMode", "65592");
-            root.SetAttribute("key", season.Id.ToString());
-            root.SetAttribute("banner", String.Format("/resources/{0}/banner", show.Id));
-            root.SetAttribute("art", String.Format("/resources/{0}/art", show.Id));
-            root.SetAttribute("title1", show.Title);
-            root.SetAttribute("title2", season.Title);
-            root.SetAttribute("identifier", "com.plexapp.plugins.library");
-            doc.AppendChild(root);
+            XmlElement MediaContainerElement = doc.CreateElement("MediaContainer");
+            MediaContainerElement.SetAttribute("size", Episodes.Count.ToString());
+            MediaContainerElement.SetAttribute("grandparentContentRating", Show.ContentRating);
+            MediaContainerElement.SetAttribute("grandparentStudio", Show.Studio);
+            MediaContainerElement.SetAttribute("grandparentTitle", Show.Title);
+            MediaContainerElement.SetAttribute("mediaTagPrefix", "/system/bundle/media/flags/");
+            // TODO: Currently static
+            MediaContainerElement.SetAttribute("mediaTagVersion", "1283229604");
+            MediaContainerElement.SetAttribute("nocache", "1");
+            // TODO: Unsure about this one. Possibly position in order from previous level.
+            MediaContainerElement.SetAttribute("parentIndex", "1");
+            MediaContainerElement.SetAttribute("parentTitle", "");
+            MediaContainerElement.SetAttribute("thumb", String.Format("/resources/{0}/thumb", Show.Id));
+            MediaContainerElement.SetAttribute("viewGroup", "episode");
+            // TODO: Currently static
+            MediaContainerElement.SetAttribute("viewMode", "65592");
+            MediaContainerElement.SetAttribute("key", Season.Id.ToString());
+            MediaContainerElement.SetAttribute("banner", String.Format("/resources/{0}/banner", Show.Id));
+            MediaContainerElement.SetAttribute("art", String.Format("/resources/{0}/art", Show.Id));
+            // TODO: Fetch theme;
+            MediaContainerElement.SetAttribute("theme", "");
+            MediaContainerElement.SetAttribute("title1", Show.Title);
+            MediaContainerElement.SetAttribute("title2", Season.Title);
+            MediaContainerElement.SetAttribute("identifier", "com.plexapp.plugins.library");
+            doc.AppendChild(MediaContainerElement);
 
-            foreach (TVEpisode episode in episodes)
+            foreach (TVEpisode Episode in Episodes)
             {
-                XmlElement el = doc.CreateElement("Video");
+                XmlElement VideoElement = doc.CreateElement("Video");
 
-                el.SetAttribute("ratingKey", episode.Id.ToString());
-                el.SetAttribute("key", String.Format("/library/metadata/{0}", episode.Id));
-                el.SetAttribute("type", episode.Type);
-                el.SetAttribute("title", episode.Title);
-                el.SetAttribute("summary", episode.Summary);
-                el.SetAttribute("index", episode.EpisodeNumber.ToString());
-                el.SetAttribute("rating", episode.Rating.ToString("F1"));
-                el.SetAttribute("thumb", String.Format("/resources/{0}/thumb/{1}", episode.Id, episode.LastUpdated));
-                el.SetAttribute("duration", episode.Duration.ToString());
-                el.SetAttribute("originallyAvailableAt", episode.AirDate.ToString("yyyy-MM-dd"));
+                VideoElement.SetAttribute("ratingKey", Episode.Id.ToString());
+                VideoElement.SetAttribute("key", String.Format("/library/metadata/{0}", Episode.Id));
+                VideoElement.SetAttribute("type", Episode.Type);
+                VideoElement.SetAttribute("title", Episode.Title);
+                VideoElement.SetAttribute("summary", Episode.Summary);
+                VideoElement.SetAttribute("index", Episode.EpisodeNumber.ToString());
+                VideoElement.SetAttribute("rating", Episode.Rating.ToString("F1"));
+                VideoElement.SetAttribute("thumb", String.Format("/resources/{0}/thumb/{1}", Episode.Id, Episode.LastUpdated));
+                VideoElement.SetAttribute("duration", Episode.Duration.ToString());
+                VideoElement.SetAttribute("originallyAvailableAt", Episode.AirDate.ToString("yyyy-MM-dd"));
 
                 // TODO Add Media / Writer / Director tags.
-                List<VideoFileInfo> VideoFiles = DataAccess.GetVideoFilesForEpisode(episode.Id);
+                List<VideoFileInfo> VideoFiles = DataAccess.GetVideoFilesForEpisode(Episode.Id);
 
                 foreach (VideoFileInfo VideoFile in VideoFiles)
                 {
@@ -324,9 +328,9 @@ namespace Splice.Server
                     PartElement.SetAttribute("size", VideoFile.Size.ToString());
 
                     MediaElement.AppendChild(PartElement);
-                    el.AppendChild(MediaElement);
+                    VideoElement.AppendChild(MediaElement);
                 }
-                root.AppendChild(el);
+                MediaContainerElement.AppendChild(VideoElement);
             }
             XmlResponse resp = new XmlResponse();
             resp.XmlDoc = doc;

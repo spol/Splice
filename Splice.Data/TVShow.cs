@@ -46,6 +46,8 @@ namespace Splice.Data
             TvdbId = Convert.ToInt32(Row["tvdbId"]);
             DvdOrder = Convert.ToInt32(Row["dvdOrder"]) != 0;
             Location = Row["location"].ToString();
+            ContentRating = Row["contentRating"].ToString();
+            Studio = Row["studio"].ToString();
         }
     }
 }
