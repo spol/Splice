@@ -7,7 +7,7 @@ using System.Xml;
 using Splice.Data;
 using Splice.Data.Filters;
 
-namespace Splice.Server
+namespace Splice.Server.Controllers
 {
     public class Library : IController
     {

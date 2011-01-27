@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Splice.Data;
 
-namespace Splice.Server
+namespace Splice.Server.Controllers
 {
     class Resources : IController
     {

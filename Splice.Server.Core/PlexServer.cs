@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Splice.Server.Controllers;
 using ZeroconfService;
 
 namespace Splice.Server
@@ -16,6 +17,7 @@ namespace Splice.Server
             Router router = new Router();
             router.AddController("library", new Library());
             router.AddController("resources", new Resources());
+            router.AddController("manage", new Manage());
             listener = new WebServer(ServerTestUrl, router);
             listener.Start();
 
