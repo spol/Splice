@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -69,6 +70,39 @@ namespace Splice.Server
             get
             {
                 return request.Headers;
+            }
+        }
+
+        public String Method
+        {
+            get
+            {
+                return request.HttpMethod;
+            }
+        }
+
+        public NameValueCollection PostData
+        {
+            get
+            {
+                if (!request.HasEntityBody)
+                {
+                    return null;
+                }
+                else
+                {
+                    StreamReader Reader = new StreamReader(request.InputStream);
+
+                    String Data = Reader.ReadToEnd();
+                    NameValueCollection Fields = new NameValueCollection();
+                    String[] KeyValues = Data.Split('&');
+                    foreach (String KeyValue in KeyValues)
+                    {
+                        String[] Parts = KeyValue.Split('=');
+                        Fields.Add(Parts[0], Parts[1]);
+                    }
+                    return Fields;
+                }
             }
         }
 

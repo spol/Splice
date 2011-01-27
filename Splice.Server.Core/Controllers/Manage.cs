@@ -49,7 +49,21 @@ namespace Splice.Server.Controllers
 
         private PlexResponse AddCollection(PlexRequest Request)
         {
-            throw new NotImplementedException();
+            if (Request.Method != "POST")
+            {
+                return XmlResponse.MethodNotAllowed();
+            }
+
+            if (Request.PostData["name"] == null)
+            {
+                // not all required fields provided.
+                return XmlResponse.BadRequest();
+            }
+            else
+            {
+                // TODO: process request and return suitable response.
+                return XmlResponse.NotFound();
+            }
         }
 
         private PlexResponse CollectionsList()

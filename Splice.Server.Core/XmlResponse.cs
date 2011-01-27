@@ -74,5 +74,55 @@ namespace Splice.Server
             resp.XmlDoc = xml;
             return resp;
         }
+
+        public static XmlResponse MethodNotAllowed()
+        {
+            XmlResponse resp = new XmlResponse();
+            resp._contentType = "text/html";
+            resp._statusCode = HttpStatusCode.MethodNotAllowed;
+
+            XmlDocument xml = new XmlDocument();
+            XmlElement html = xml.CreateElement("html");
+            xml.AppendChild(html);
+            XmlElement head = xml.CreateElement("head");
+            XmlElement title = xml.CreateElement("title");
+            title.InnerText = "Not Found";
+            head.AppendChild(title);
+            XmlElement body = xml.CreateElement("body");
+            XmlElement h1 = xml.CreateElement("h1");
+            h1.InnerText = "405 Method Not Allowed";
+            body.AppendChild(h1);
+
+            html.AppendChild(head);
+            html.AppendChild(body);
+
+            resp.XmlDoc = xml;
+            return resp;
+        }
+
+        public static XmlResponse BadRequest()
+        {
+            XmlResponse resp = new XmlResponse();
+            resp._contentType = "text/html";
+            resp._statusCode = HttpStatusCode.BadRequest;
+
+            XmlDocument xml = new XmlDocument();
+            XmlElement html = xml.CreateElement("html");
+            xml.AppendChild(html);
+            XmlElement head = xml.CreateElement("head");
+            XmlElement title = xml.CreateElement("title");
+            title.InnerText = "Not Found";
+            head.AppendChild(title);
+            XmlElement body = xml.CreateElement("body");
+            XmlElement h1 = xml.CreateElement("h1");
+            h1.InnerText = "400 Bad Request";
+            body.AppendChild(h1);
+
+            html.AppendChild(head);
+            html.AppendChild(body);
+
+            resp.XmlDoc = xml;
+            return resp;
+        }
     }
 }
