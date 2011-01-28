@@ -54,14 +54,32 @@ namespace Splice.Server.Controllers
                 return XmlResponse.MethodNotAllowed();
             }
 
-            if (Request.PostData["name"] == null)
+            if (Request.PostData["name"] == null || Request.PostData["name"].Length == 0 ||
+                Request.PostData["type"] == null)
             {
                 // not all required fields provided.
                 return XmlResponse.BadRequest();
             }
             else
             {
-                // TODO: process request and return suitable response.
+                VideoCollection Collection = new VideoCollection();
+
+                Collection.Title = Request.PostData["name"];
+
+                try
+                {
+                    Collection.Type = (VideoCollectionType)Enum.Parse(typeof(VideoCollectionType), Request.PostData["type"]);
+                }
+                catch (ArgumentException)
+                {
+                    return XmlResponse.BadRequest();
+                }
+
+                // TODO: Handle artwork.
+
+                DataAccess.SaveCollection(Collection);
+
+                // TODO: Return correct response.
                 return XmlResponse.NotFound();
             }
         }

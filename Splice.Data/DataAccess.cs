@@ -660,6 +660,31 @@ PictureHeight, PictureWidth, videoFrameRate, path, size, fileHash) VALUES (
             return VidFile;
         }
 
+        public static VideoCollection SaveCollection(VideoCollection Collection)
+        {
+            SQLiteCommand Cmd = Connection.CreateCommand();
+
+            if (Collection.Id == 0)
+            {
+                Collection.Id = GetNewGlobalId("collection");
+
+                Cmd.CommandText = "INSERT INTO Collections (id, title, type, art) VALUES (@Id, @Title, @Type, @Art);";
+            }
+            else
+            {
+                Cmd.CommandText = "UPDATE Collections SET title = @Title, type = @Type, art = @Art WHERE id = @id";
+            }
+
+            Cmd.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32) { Value = Collection.Id });
+            Cmd.Parameters.Add(new SQLiteParameter("@Title", DbType.String) { Value = Collection.Title });
+            Cmd.Parameters.Add(new SQLiteParameter("@Type", DbType.String) { Value = Collection.Type.ToString() });
+            Cmd.Parameters.Add(new SQLiteParameter("@Art", DbType.String) { Value = Collection.Art });
+
+            Cmd.ExecuteNonQuery();
+
+            return Collection;
+        }
+
         public static Boolean AssocVideoWithEpisode(VideoFileInfo VidFile, TVEpisode Episode)
         {
             SQLiteCommand cmd = Connection.CreateCommand();
