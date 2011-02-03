@@ -185,13 +185,13 @@ namespace Splice.Data
                     show.ContentRating = showRow["contentRating"].ToString();
                     show.Duration = Convert.ToInt32(showRow["duration"]);
                     show.LastUpdated = Convert.ToInt32(showRow["lastUpdated"]);
-                    // TODO.
+                    // TODO: Get LeafCount.
                     show.LeafCount = 0;
                     show.AirDate = Convert.ToDateTime(showRow["originallyAvailableAt"]);
                     show.Rating = Convert.ToSingle(showRow["rating"]);
                     show.Studio = showRow["studio"].ToString();
                     show.Summary = showRow["summary"].ToString();
-                    // TODO
+                    // TODO: Need to track views first.
                     show.ViewedLeafCount = 0;
                     shows.Add(show);
                 }
@@ -681,6 +681,8 @@ PictureHeight, PictureWidth, videoFrameRate, path, size, fileHash) VALUES (
             Cmd.Parameters.Add(new SQLiteParameter("@Art", DbType.String) { Value = Collection.Art });
 
             Cmd.ExecuteNonQuery();
+
+            // TODO: Save Locations
 
             return Collection;
         }

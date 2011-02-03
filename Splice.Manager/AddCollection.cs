@@ -6,20 +6,49 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Splice.Manager.Properties;
+using System.Collections.Specialized;
+using System.Collections;
 
 namespace Splice.Manager
 {
     public partial class AddCollection : Form
     {
-        public string NewCollectionName { get; set; }
+        private String CollectionArtwork { get; set; }
+
+        public Collection NewCollection { get; set; }
+
         public AddCollection()
         {
             InitializeComponent();
+
+            List<KeyValuePair<String, String>> Types = new List<KeyValuePair<String, String>>();
+
+            Types.Add(new KeyValuePair<String, String>("show", "Television Shows"));
+            Types.Add(new KeyValuePair<String, String>("movie", "Movies"));
+            CollectionType.DataSource = Types;
+            CollectionType.DisplayMember = "Value";
+            CollectionType.SelectedIndex = 0;
         }
 
         private void AddButton_Click(object sender, EventArgs e)
         {
-            NewCollectionName = CollectionName.Text;
+            NewCollection = new Collection()
+            {
+                Name = CollectionName.Text,
+                Type = ((KeyValuePair<String, String>)CollectionType.SelectedItem).Key,
+                Paths = PathsListBox.Items.Cast<String>().ToList()
+            };
+
+            if (CollectionArtwork == null)
+            {
+                NewCollection.Artwork = Resources.DefaultVideoCollectionArtwork;
+            }
+            else
+            {
+                NewCollection.Artwork = new Bitmap(CollectionArtwork);
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -60,6 +89,24 @@ namespace Splice.Manager
             }
             UpdateAddButtonStatus();
         }
+
+        private void ChooseArtworkButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ChooseArtwork = new OpenFileDialog();
+            ChooseArtwork.Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
+            if (ChooseArtwork.ShowDialog() == DialogResult.OK)
+            {
+                CollectionArtwork = ChooseArtwork.FileName;
+                ArtworkPreview.Image = new Bitmap(CollectionArtwork);
+            }
+        }
+
+        private void ClearArtworkButton_Click(object sender, EventArgs e)
+        {
+            CollectionArtwork = null;
+            ArtworkPreview.Image = Resources.DefaultVideoCollectionArtwork;
+        }
+
 
     }
 }

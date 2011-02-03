@@ -54,8 +54,8 @@ namespace Splice.Server.Controllers
                 return XmlResponse.MethodNotAllowed();
             }
 
-            if (Request.PostData["name"] == null || Request.PostData["name"].Length == 0 ||
-                Request.PostData["type"] == null)
+            if (Request.PostData["Name"] == null || Request.PostData["Name"].Length == 0 ||
+                Request.PostData["Type"] == null)
             {
                 // not all required fields provided.
                 return XmlResponse.BadRequest();
@@ -75,12 +75,15 @@ namespace Splice.Server.Controllers
                     return XmlResponse.BadRequest();
                 }
 
+                Collection.Locations.AddRange(Request.PostData["Paths"].Split(',').ToList<String>());
+                
+
                 // TODO: Handle artwork.
 
                 DataAccess.SaveCollection(Collection);
 
                 // TODO: Return correct response.
-                return XmlResponse.NotFound();
+                return XmlResponse.Created();
             }
         }
 

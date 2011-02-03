@@ -75,6 +75,24 @@ namespace Splice.Server
             return resp;
         }
 
+        public static XmlResponse Created()
+        {
+            XmlResponse resp = new XmlResponse();
+            resp._contentType = "text/xml";
+            resp._statusCode = HttpStatusCode.Created;
+
+            XmlDocument xml = new XmlDocument();
+            XmlElement ResponseElement = xml.CreateElement("response");
+            xml.AppendChild(ResponseElement);
+            XmlElement Message = xml.CreateElement("message");
+            Message.InnerText = "Entity Created Successfully";
+
+            ResponseElement.AppendChild(Message);
+
+            resp.XmlDoc = xml;
+            return resp;
+        }
+
         public static XmlResponse MethodNotAllowed()
         {
             XmlResponse resp = new XmlResponse();

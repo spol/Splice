@@ -37,10 +37,12 @@
             this.AddPathButton = new System.Windows.Forms.Button();
             this.RemovePathButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.ArtworkPreview = new System.Windows.Forms.PictureBox();
+            this.ChooseArtworkButton = new System.Windows.Forms.Button();
+            this.ClearArtworkButton = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.CollectionType = new System.Windows.Forms.ComboBox();
+            ((System.ComponentModel.ISupportInitialize)(this.ArtworkPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -63,7 +65,7 @@
             // AddButton
             // 
             this.AddButton.Enabled = false;
-            this.AddButton.Location = new System.Drawing.Point(194, 409);
+            this.AddButton.Location = new System.Drawing.Point(189, 372);
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(98, 23);
             this.AddButton.TabIndex = 2;
@@ -73,7 +75,7 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(298, 409);
+            this.CancelButton.Location = new System.Drawing.Point(293, 372);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 3;
@@ -84,15 +86,15 @@
             // PathsListBox
             // 
             this.PathsListBox.FormattingEnabled = true;
-            this.PathsListBox.Location = new System.Drawing.Point(16, 70);
+            this.PathsListBox.Location = new System.Drawing.Point(12, 83);
             this.PathsListBox.Name = "PathsListBox";
-            this.PathsListBox.Size = new System.Drawing.Size(357, 173);
+            this.PathsListBox.Size = new System.Drawing.Size(361, 121);
             this.PathsListBox.TabIndex = 4;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 54);
+            this.label2.Location = new System.Drawing.Point(13, 67);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(34, 13);
             this.label2.TabIndex = 5;
@@ -100,7 +102,7 @@
             // 
             // AddPathButton
             // 
-            this.AddPathButton.Location = new System.Drawing.Point(17, 249);
+            this.AddPathButton.Location = new System.Drawing.Point(12, 210);
             this.AddPathButton.Name = "AddPathButton";
             this.AddPathButton.Size = new System.Drawing.Size(75, 23);
             this.AddPathButton.TabIndex = 6;
@@ -110,7 +112,7 @@
             // 
             // RemovePathButton
             // 
-            this.RemovePathButton.Location = new System.Drawing.Point(103, 249);
+            this.RemovePathButton.Location = new System.Drawing.Point(103, 210);
             this.RemovePathButton.Name = "RemovePathButton";
             this.RemovePathButton.Size = new System.Drawing.Size(75, 23);
             this.RemovePathButton.TabIndex = 7;
@@ -121,48 +123,72 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 306);
+            this.label3.Location = new System.Drawing.Point(13, 255);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Artwork";
             // 
-            // pictureBox1
+            // ArtworkPreview
             // 
-            this.pictureBox1.Image = global::Splice.Manager.Properties.Resources.DefaultVideoCollectionArtwork;
-            this.pictureBox1.Location = new System.Drawing.Point(210, 306);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(158, 81);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
+            this.ArtworkPreview.Image = global::Splice.Manager.Properties.Resources.DefaultVideoCollectionArtwork;
+            this.ArtworkPreview.Location = new System.Drawing.Point(210, 267);
+            this.ArtworkPreview.Name = "ArtworkPreview";
+            this.ArtworkPreview.Size = new System.Drawing.Size(158, 81);
+            this.ArtworkPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ArtworkPreview.TabIndex = 9;
+            this.ArtworkPreview.TabStop = false;
             // 
-            // button3
+            // ChooseArtworkButton
             // 
-            this.button3.Location = new System.Drawing.Point(17, 333);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Choose...";
-            this.button3.UseVisualStyleBackColor = true;
+            this.ChooseArtworkButton.Location = new System.Drawing.Point(12, 294);
+            this.ChooseArtworkButton.Name = "ChooseArtworkButton";
+            this.ChooseArtworkButton.Size = new System.Drawing.Size(75, 23);
+            this.ChooseArtworkButton.TabIndex = 10;
+            this.ChooseArtworkButton.Text = "Choose...";
+            this.ChooseArtworkButton.UseVisualStyleBackColor = true;
+            this.ChooseArtworkButton.Click += new System.EventHandler(this.ChooseArtworkButton_Click);
             // 
-            // button4
+            // ClearArtworkButton
             // 
-            this.button4.Location = new System.Drawing.Point(17, 364);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 11;
-            this.button4.Text = "Clear";
-            this.button4.UseVisualStyleBackColor = true;
+            this.ClearArtworkButton.Location = new System.Drawing.Point(12, 325);
+            this.ClearArtworkButton.Name = "ClearArtworkButton";
+            this.ClearArtworkButton.Size = new System.Drawing.Size(75, 23);
+            this.ClearArtworkButton.TabIndex = 11;
+            this.ClearArtworkButton.Text = "Clear";
+            this.ClearArtworkButton.UseVisualStyleBackColor = true;
+            this.ClearArtworkButton.Click += new System.EventHandler(this.ClearArtworkButton_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 42);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(80, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Collection Type";
+            // 
+            // CollectionType
+            // 
+            this.CollectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CollectionType.FormattingEnabled = true;
+            this.CollectionType.Items.AddRange(new object[] {
+            "Shows"});
+            this.CollectionType.Location = new System.Drawing.Point(103, 39);
+            this.CollectionType.Name = "CollectionType";
+            this.CollectionType.Size = new System.Drawing.Size(130, 21);
+            this.CollectionType.TabIndex = 13;
             // 
             // AddCollection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(380, 444);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(380, 405);
+            this.Controls.Add(this.CollectionType);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.ClearArtworkButton);
+            this.Controls.Add(this.ChooseArtworkButton);
+            this.Controls.Add(this.ArtworkPreview);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.RemovePathButton);
             this.Controls.Add(this.AddPathButton);
@@ -174,8 +200,8 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddCollection";
-            this.Text = "AddCollection";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.Text = "Add Collection";
+            ((System.ComponentModel.ISupportInitialize)(this.ArtworkPreview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,8 +218,10 @@
         private System.Windows.Forms.Button AddPathButton;
         private System.Windows.Forms.Button RemovePathButton;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.PictureBox ArtworkPreview;
+        private System.Windows.Forms.Button ChooseArtworkButton;
+        private System.Windows.Forms.Button ClearArtworkButton;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox CollectionType;
     }
 }

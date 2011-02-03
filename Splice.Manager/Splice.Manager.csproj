@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Krystalware.UploadHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Krystalware.UploadHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -54,6 +58,7 @@
     <Compile Include="AddCollection.Designer.cs">
       <DependentUpon>AddCollection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Collection.cs" />
     <Compile Include="Controls\CollectionList.cs">
       <SubType>UserControl</SubType>
     </Compile>
