@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Splice.Data;
 using System.Xml;
+using Splice.Configuration;
 
 namespace Splice.Server.Controllers
 {
@@ -49,6 +51,10 @@ namespace Splice.Server.Controllers
 
         private PlexResponse AddCollection(PlexRequest Request)
         {
+            if (Request.Headers["Expect"] != null)
+            {
+                throw new Exception("Received Expect Header");
+            }
             if (Request.Method != "POST")
             {
                 return XmlResponse.MethodNotAllowed();
@@ -77,10 +83,17 @@ namespace Splice.Server.Controllers
 
                 Collection.Locations.AddRange(Request.PostData["Paths"].Split(',').ToList<String>());
                 
+                Collection = DataAccess.SaveCollection(Collection);
 
                 // TODO: Handle artwork.
+                string SavePath = CacheManager.GetCachePath(Collection.Id, ArtworkType.Fanart);
+                FileStream FS = new FileStream(SavePath + "Artwork.jpg", FileMode.Create);
+                BinaryWriter Writer = new BinaryWriter(FS);
 
-                DataAccess.SaveCollection(Collection);
+                Writer.Write(Request.Files["Artwork"].FileData);
+                Writer.Close();
+
+                
 
                 // TODO: Return correct response.
                 return XmlResponse.Created();

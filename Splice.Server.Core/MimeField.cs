@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Splice.Server
 {
-    class MimePostField : PostField
+    public class MimePostField : PostField
     {
         private NameValueCollection _Headers = new NameValueCollection();
         public NameValueCollection Headers
@@ -18,11 +20,21 @@ namespace Splice.Server
             }
         }
 
+        private Boolean _IsFile;
         public Boolean IsFile
         {
             get
             {
-                return false;
+                return _IsFile;
+            }
+        }
+
+        private byte[] _FileData;
+        public byte[] FileData
+        {
+            get
+            {
+                return _FileData;
             }
         }
 
@@ -52,7 +64,7 @@ namespace Splice.Server
                     // check for name
                     if (Fields[0] == "Content-Disposition")
                     {
-                        Regex R = new Regex("name=\"(.*)\"");
+                        Regex R = new Regex("name=\"(.*?)\"");
 
                         Match M = R.Match(Fields[1]);
 
@@ -60,12 +72,34 @@ namespace Splice.Server
                         {
                             _Name = M.Groups[1].Value;
                         }
+
+                        Regex R2 = new Regex("filename=\"(.*?)\"");
+
+                        M = R2.Match(Fields[1]);
+
+                        if (M.Groups.Count > 1)
+                        {
+                            _IsFile = true;
+                        }
                     }
 
                 }
             }
 
-            _Value = Data.Substring(0, Data.Length-2);
+            if (!IsFile)
+            {
+                _Value = Data.Substring(0, Data.Length - 2);
+            }
+            else
+            {
+                //_FileData = Encoding.UTF8.GetBytes(Data.Substring(0, Data.Length - 2));
+                BinaryFormatter F = new BinaryFormatter();
+                MemoryStream MS = new MemoryStream();
+                F.Serialize(MS, Data.Substring(0, Data.Length - 2));
+                MS.Seek(0, 0);
+                _FileData = MS.ToArray();
+
+            }
         }
     }
 }

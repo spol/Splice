@@ -683,8 +683,57 @@ PictureHeight, PictureWidth, videoFrameRate, path, size, fileHash) VALUES (
             Cmd.ExecuteNonQuery();
 
             // TODO: Save Locations
+            
+            // Check for existing collections.
+            List<String> CurrentLocations = GetVideoCollectionLocations(Collection.Id);
+            List<String> Locations = Collection.Locations;
+
+            List<String> CommonLocations = CurrentLocations.Intersect<String>(Locations).ToList<String>();
+
+            foreach (String Location in CommonLocations)
+            {
+                Locations.Remove(Location);
+                CurrentLocations.Remove(Location);
+            }
+
+
+            // Clear no longer present collections.
+            foreach (String RemovedLocation in CurrentLocations)
+            {
+                RemoveLocation(Collection.Id, RemovedLocation);
+            }
+
+            // Add new collections.
+            foreach (String AddedLocation in Locations)
+            {
+                AddLocation(Collection.Id, AddedLocation);
+            }
 
             return Collection;
+        }
+
+        public static void RemoveLocation(Int32 CollectionId, String LocationPath)
+        {
+            SQLiteCommand Cmd = Connection.CreateCommand();
+
+            Cmd.CommandText = "DELETE FROM CollectionLocations WHERE CollectionId = @CollectionId AND Path = @Path;";
+
+            Cmd.Parameters.Add(new SQLiteParameter("@CollectionId", DbType.Int32) { Value = CollectionId });
+            Cmd.Parameters.Add(new SQLiteParameter("@Path", DbType.String) { Value = LocationPath });
+
+            Cmd.ExecuteNonQuery();
+        }
+
+        public static void AddLocation(Int32 CollectionId, String LocationPath)
+        {
+            SQLiteCommand Cmd = Connection.CreateCommand();
+
+            Cmd.CommandText = "INSERT INTO CollectionLocations (CollectionId, Path) VALUES (@CollectionId, @Path);";
+
+            Cmd.Parameters.Add(new SQLiteParameter("@CollectionId", DbType.Int32) { Value = CollectionId });
+            Cmd.Parameters.Add(new SQLiteParameter("@Path", DbType.String) { Value = LocationPath });
+
+            Cmd.ExecuteNonQuery();
         }
 
         public static Boolean AssocVideoWithEpisode(VideoFileInfo VidFile, TVEpisode Episode)

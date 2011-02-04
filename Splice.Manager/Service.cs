@@ -14,11 +14,12 @@ namespace Splice.Manager
     {
         public static List<VideoCollection> GetCollectionsList()
         {
+            HttpWebResponse Response = null;
             try
             {
                 HttpWebRequest Request = (HttpWebRequest)WebRequest.Create("http://localhost:32400/manage/collections/list");
-                HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
-
+                Request.KeepAlive = false;
+                Response = (HttpWebResponse)Request.GetResponse();
 
                 XmlTextReader XmlReader = new XmlTextReader(Response.GetResponseStream());
 
@@ -65,7 +66,7 @@ namespace Splice.Manager
                             break;
                         }
                     }
-
+                    Response.Close();
                     return Collections;
                 }
 
@@ -74,6 +75,13 @@ namespace Splice.Manager
             catch (WebException)
             {
                 // TODO: Handle unable to connect.
+            }
+            finally
+            {
+                if (Response != null)
+                {
+                    Response.Close();
+                }
             }
             return new List<VideoCollection>();
 
@@ -85,12 +93,19 @@ namespace Splice.Manager
 
             Collection.Artwork.Save(FileStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
+            FileStream.Seek(0, SeekOrigin.Begin);
+
             UploadFile Artwork = new UploadFile(FileStream, "Artwork", "artwork.jpg", "image/jpg");
 
-            UploadFile[] Files = new UploadFile[0];
-            //Files[0] = Artwork;
+            UploadFile[] Files = new UploadFile[1];
+            Files[0] = Artwork;
 
-            string Response = HttpUploadHelper.Upload("http://localhost:32400/manage/collections/add", Files, Collection.ToNameValueCollection()); 
+            HttpWebRequest Request = (HttpWebRequest)WebRequest.Create("http://localhost:32400/manage/collections/add");
+            Request.Proxy = new WebProxy("localhost", 8888);
+            Request.ServicePoint.Expect100Continue = false;
+            Request.KeepAlive = false;
+            Request.Timeout = 1000 * 60 * 10;
+            HttpWebResponse Response = HttpUploadHelper.Upload(Request, Files, Collection.ToNameValueCollection()); 
 
         }
     }

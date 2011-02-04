@@ -71,6 +71,10 @@
     <Compile Include="XmlResponse.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Splice.Configuration\Splice.Configuration.csproj">
+      <Project>{012511B2-8FE1-4202-B2C9-A1D20CD07D0B}</Project>
+      <Name>Splice.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Splice.Data\Splice.Data.csproj">
       <Project>{966F1DEB-75E2-4817-AC11-1F79768D568B}</Project>
       <Name>Splice.Data</Name>

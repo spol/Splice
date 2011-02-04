@@ -83,6 +83,14 @@ namespace Splice.Server
         }
 
         //private List<?> _Files;
+        private Dictionary<String, MimePostField> _Files = new Dictionary<string, MimePostField>();
+        public Dictionary<String, MimePostField> Files
+        {
+            get
+            {
+                return _Files;
+            }
+        }
         private List<PostField> _Fields = new List<PostField>();
         private NameValueCollection _PostData;
         public NameValueCollection PostData
@@ -129,6 +137,7 @@ namespace Splice.Server
                         MimePostField F = new MimePostField(Field.Groups[1].Captures[0].Value);
                         if (F.IsFile)
                         {
+                            _Files.Add(F.Name, F);
                         }
                         else {
                             _PostData.Add(F.Name, F.Value);

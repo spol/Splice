@@ -25,6 +25,7 @@ namespace Splice.Manager.Controls
             if (AddCollectionDialog.ShowDialog() == DialogResult.OK)
             {
                 Service.CreateCollection(AddCollectionDialog.NewCollection);
+                LoadFromServer();
             }
         }
 

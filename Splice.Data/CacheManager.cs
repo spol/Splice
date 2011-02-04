@@ -25,11 +25,7 @@ namespace Splice.Data
         }
         public static string SaveArtwork(Int32 EntityId, string Uri, ArtworkType Type)
         {
-            string SavePath = CachePath + EntityId.ToString() + "\\" + Type.ToString() + "\\";
-            if (!Directory.Exists(SavePath))
-            {
-                Directory.CreateDirectory(SavePath);
-            }
+            string SavePath = GetCachePath(EntityId, Type);
 
             string Filename = Path.GetFileName(Uri);
             Uri = BannerRoot + Uri;
@@ -41,5 +37,17 @@ namespace Splice.Data
 
 
         }
+
+        public static string GetCachePath(Int32 EntityId, ArtworkType Type)
+        {
+            string SavePath = CachePath + EntityId.ToString() + "\\" + Type.ToString() + "\\";
+            if (!Directory.Exists(SavePath))
+            {
+                Directory.CreateDirectory(SavePath);
+            }
+
+            return SavePath;
+        }
+
     }
 }
