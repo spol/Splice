@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Splice.Data;
 
 namespace Splice.Manager.Controls
 {
@@ -22,6 +23,8 @@ namespace Splice.Manager.Controls
                 CollectionNameLabel.Text = value;
             }
         }
+
+        public VideoCollection Collection { get; set; }
 
         private Boolean _Selected;
         public Boolean Selected

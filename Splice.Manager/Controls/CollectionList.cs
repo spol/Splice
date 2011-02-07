@@ -40,6 +40,7 @@ namespace Splice.Manager.Controls
             {
                 CollectionListItem CollectionLabel = new CollectionListItem();
                 CollectionLabel.CollectionName = Collection.Title;
+                CollectionLabel.Collection = Collection;
 
                 CollectionLabel.Width = LayoutPanel.Width;
                 CollectionLabel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
@@ -47,6 +48,20 @@ namespace Splice.Manager.Controls
                 LayoutPanel.Controls.Add(CollectionLabel);
             }
             LayoutPanel.ResumeLayout();
+        }
+
+        private void DeleteCollectionButton_Click(object sender, EventArgs e)
+        {
+            foreach (Control Ctrl in LayoutPanel.Controls)
+            {
+                if (((CollectionListItem)Ctrl).Selected)
+                {
+                    Service.DeleteCollection(((CollectionListItem)Ctrl).Collection.Id);
+                    break;
+
+                }
+            }
+            LoadFromServer();
         }
     }
 }

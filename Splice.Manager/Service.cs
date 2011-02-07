@@ -7,6 +7,8 @@ using System.Net;
 using System.Xml;
 using Splice.Data;
 using Krystalware.UploadHelper;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace Splice.Manager
 {
@@ -107,6 +109,40 @@ namespace Splice.Manager
             Request.Timeout = 1000 * 60 * 10;
             HttpWebResponse Response = HttpUploadHelper.Upload(Request, Files, Collection.ToNameValueCollection()); 
 
+        }
+
+        public static void DeleteCollection(Int32 CollectionId)
+        {
+            NameValueCollection Fields = new NameValueCollection();
+            Fields.Add("CollectionId", CollectionId.ToString());
+
+            HttpWebRequest Request = (HttpWebRequest)WebRequest.Create("http://localhost:32400/manage/collections/delete");
+            Request.Method = "POST";
+            Request.ContentType = "application/x-www-form-urlencoded";
+            Stream RequestStream = Request.GetRequestStream();
+
+            Byte[] RequestData = Encoding.UTF8.GetBytes(UrlEncodeForm(Fields));
+
+            RequestStream.Write(RequestData, 0, RequestData.Length);
+            RequestStream.Close();
+
+            HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
+        }
+
+        private static String UrlEncodeForm(NameValueCollection Fields)
+        {
+            StringBuilder Builder = new StringBuilder();
+
+            foreach (String FieldName in Fields.AllKeys)
+            {
+                if (Builder.Length != 0)
+                {
+                    Builder.Append("&");
+                }
+                Builder.Append(HttpUtility.UrlEncode(FieldName) + "=" + HttpUtility.UrlEncode(Fields[FieldName]));
+            }
+
+            return Builder.ToString();
         }
     }
 }

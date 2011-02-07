@@ -30,6 +30,8 @@
         {
             this.AddCollectionButton = new System.Windows.Forms.Button();
             this.LayoutPanel = new System.Windows.Forms.Panel();
+            this.DeleteCollectionButton = new System.Windows.Forms.Button();
+            this.EditButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // AddCollectionButton
@@ -56,11 +58,33 @@
             this.LayoutPanel.Size = new System.Drawing.Size(252, 403);
             this.LayoutPanel.TabIndex = 3;
             // 
+            // DeleteCollectionButton
+            // 
+            this.DeleteCollectionButton.Location = new System.Drawing.Point(88, 406);
+            this.DeleteCollectionButton.Name = "DeleteCollectionButton";
+            this.DeleteCollectionButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteCollectionButton.TabIndex = 4;
+            this.DeleteCollectionButton.Text = "Delete";
+            this.DeleteCollectionButton.UseVisualStyleBackColor = true;
+            this.DeleteCollectionButton.Click += new System.EventHandler(this.DeleteCollectionButton_Click);
+            // 
+            // EditButton
+            // 
+            this.EditButton.Enabled = false;
+            this.EditButton.Location = new System.Drawing.Point(174, 406);
+            this.EditButton.Name = "EditButton";
+            this.EditButton.Size = new System.Drawing.Size(75, 23);
+            this.EditButton.TabIndex = 5;
+            this.EditButton.Text = "Edit";
+            this.EditButton.UseVisualStyleBackColor = true;
+            // 
             // CollectionList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.Controls.Add(this.EditButton);
+            this.Controls.Add(this.DeleteCollectionButton);
             this.Controls.Add(this.LayoutPanel);
             this.Controls.Add(this.AddCollectionButton);
             this.Name = "CollectionList";
@@ -73,5 +97,7 @@
 
         private System.Windows.Forms.Button AddCollectionButton;
         private System.Windows.Forms.Panel LayoutPanel;
+        private System.Windows.Forms.Button DeleteCollectionButton;
+        private System.Windows.Forms.Button EditButton;
     }
 }

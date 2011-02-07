@@ -60,7 +60,7 @@ namespace Splice.Server.Controllers
                 return XmlResponse.MethodNotAllowed();
             }
 
-            if (Request.PostData["Name"] == null || Request.PostData["Name"].Length == 0 ||
+            if (Request.PostData["Name"] == null || Request.PostData["Name"].DataAsString.Length == 0 ||
                 Request.PostData["Type"] == null)
             {
                 // not all required fields provided.
@@ -70,18 +70,18 @@ namespace Splice.Server.Controllers
             {
                 VideoCollection Collection = new VideoCollection();
 
-                Collection.Title = Request.PostData["name"];
+                Collection.Title = Request.PostData["Name"].DataAsString;
 
                 try
                 {
-                    Collection.Type = (VideoCollectionType)Enum.Parse(typeof(VideoCollectionType), Request.PostData["type"]);
+                    Collection.Type = (VideoCollectionType)Enum.Parse(typeof(VideoCollectionType), Request.PostData["Type"].DataAsString);
                 }
                 catch (ArgumentException)
                 {
                     return XmlResponse.BadRequest();
                 }
 
-                Collection.Locations.AddRange(Request.PostData["Paths"].Split(',').ToList<String>());
+                Collection.Locations.AddRange(Request.PostData["Paths"].DataAsString.Split(',').ToList<String>());
                 
                 Collection = DataAccess.SaveCollection(Collection);
 
@@ -90,7 +90,7 @@ namespace Splice.Server.Controllers
                 FileStream FS = new FileStream(SavePath + "Artwork.jpg", FileMode.Create);
                 BinaryWriter Writer = new BinaryWriter(FS);
 
-                Writer.Write(Request.Files["Artwork"].FileData);
+                Writer.Write(Request.PostData["Artwork"].Data);
                 Writer.Close();
 
                 

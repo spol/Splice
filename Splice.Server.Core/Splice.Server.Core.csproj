@@ -58,14 +58,16 @@
     <Compile Include="IController.cs" />
     <Compile Include="ImageResponse.cs" />
     <Compile Include="Controllers\Library.cs" />
-    <Compile Include="MimeField.cs" />
+    <Compile Include="MultipartPostData.cs" />
     <Compile Include="PlexRequest.cs" />
     <Compile Include="PlexResponse.cs" />
+    <Compile Include="PostData.cs" />
     <Compile Include="PostField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\Resources.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="PlexServer.cs" />
+    <Compile Include="UrlEncodedPostData.cs" />
     <Compile Include="VideoResponse.cs" />
     <Compile Include="WebServer.cs" />
     <Compile Include="XmlResponse.cs" />
