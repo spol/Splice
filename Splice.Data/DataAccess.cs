@@ -747,5 +747,19 @@ PictureHeight, PictureWidth, videoFrameRate, path, size, fileHash) VALUES (
 
             return cmd.ExecuteNonQuery() > 0;
         }
+
+        public static Boolean DeleteCollection(int CollectionId)
+        {
+            SQLiteCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"DELETE FROM CollectionLocations WHERE CollectionId = @CollectionId");
+            cmd.Parameters.Add(new SQLiteParameter("@CollectionId", DbType.Int32) { Value = CollectionId });
+            cmd.ExecuteNonQuery();
+
+            cmd = Connection.CreateCommand();
+            cmd.CommandText = String.Format(@"DELETE FROM Collections WHERE id = @CollectionId");
+            cmd.Parameters.Add(new SQLiteParameter("@CollectionId", DbType.Int32) { Value = CollectionId });
+
+            return cmd.ExecuteNonQuery() > 0;
+        }
     }
 }

@@ -14,17 +14,17 @@ namespace Splice.Server
 
         public MultipartPostData(HttpListenerRequest Request)
         {
+            if (!Request.ContentType.StartsWith("multipart/form-data;"))
+            {
+                throw new Exception("Not a Multipart Post Request");
+            }
+
             MemoryStream MemStream = new MemoryStream();
             Byte[] BinaryData = new Byte[512];
             int ReadCount = 0;
             while ((ReadCount = Request.InputStream.Read(BinaryData, 0, BinaryData.Length)) > 0)
             {
                 MemStream.Write(BinaryData, 0, ReadCount);
-            }
-
-            if (!Request.ContentType.StartsWith("multipart/form-data;"))
-            {
-                throw new Exception("Not a Multipart Post Request");
             }
 
             Regex R = new Regex("boundary=(-+[a-f0-9]+)$", RegexOptions.Multiline);
@@ -53,7 +53,7 @@ namespace Splice.Server
                         if (LastBoundary != -1)
                         {
                             Int64 NewBoundary = MemStream.Position - (Boundary.Length + 2);
-                            Int64 Length = NewBoundary - LastBoundary;
+                            Int64 Length = NewBoundary - 2 - LastBoundary; // -2 for trailing \r\n
 
                             MemStream.Seek(LastBoundary, SeekOrigin.Begin);
                             Byte[] FieldData = new Byte[Length];

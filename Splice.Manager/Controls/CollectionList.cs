@@ -50,13 +50,28 @@ namespace Splice.Manager.Controls
             LayoutPanel.ResumeLayout();
         }
 
+        public CollectionListItem SelectedItem
+        {
+            get
+            {
+                foreach (Control Ctrl in LayoutPanel.Controls)
+                {
+                    if (((CollectionListItem)Ctrl).Selected)
+                    {
+                        return (CollectionListItem)Ctrl;
+                    }
+                }
+                return null;
+            }
+        }
+
         private void DeleteCollectionButton_Click(object sender, EventArgs e)
         {
             foreach (Control Ctrl in LayoutPanel.Controls)
             {
                 if (((CollectionListItem)Ctrl).Selected)
                 {
-                    Service.DeleteCollection(((CollectionListItem)Ctrl).Collection.Id);
+                    Service.DeleteCollection(SelectedItem.Collection.Id);
                     break;
 
                 }

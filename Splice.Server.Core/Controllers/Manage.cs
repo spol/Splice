@@ -36,7 +36,7 @@ namespace Splice.Server.Controllers
             }
             else if (Request.PathSegments[2] == "delete")
             {
-                return DeleteCollection(Convert.ToInt32(Request.PathSegments[3]));
+                return DeleteCollection(Request);
             }
             else
             {
@@ -44,9 +44,21 @@ namespace Splice.Server.Controllers
             }
         }
 
-        private PlexResponse DeleteCollection(int CollectionId)
+        private PlexResponse DeleteCollection(PlexRequest Request)
         {
-            throw new NotImplementedException();
+            if (Request.Method != "POST")
+            {
+                return XmlResponse.MethodNotAllowed();
+            }
+
+            if (Request.PostData["CollectionId"] == null)
+            {
+                return XmlResponse.BadRequest();
+            }
+
+            DataAccess.DeleteCollection(Convert.ToInt32(Request.PostData["CollectionId"].DataAsString));
+
+            return XmlResponse.OK("Collection Deleted");
         }
 
         private PlexResponse AddCollection(PlexRequest Request)

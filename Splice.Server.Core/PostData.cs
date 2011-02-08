@@ -13,7 +13,14 @@ namespace Splice.Server
         {
             get
             {
-                return Fields[Name];
+                if (Fields.Keys.Contains(Name))
+                {
+                    return Fields[Name];
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
     }

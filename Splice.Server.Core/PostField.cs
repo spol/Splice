@@ -73,7 +73,12 @@ namespace Splice.Server
             }
 
             throw new Exception("Header separator not found.");
-            
+        }
+
+        public PostField(String Name, String Field)
+        {
+            _Name = Name;
+            _Data = Encoding.UTF8.GetBytes(Field);
         }
 
         private void ProcessHeaders(string Headers)

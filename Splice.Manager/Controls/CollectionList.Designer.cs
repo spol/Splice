@@ -60,6 +60,7 @@
             // 
             // DeleteCollectionButton
             // 
+            this.DeleteCollectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DeleteCollectionButton.Location = new System.Drawing.Point(88, 406);
             this.DeleteCollectionButton.Name = "DeleteCollectionButton";
             this.DeleteCollectionButton.Size = new System.Drawing.Size(75, 23);
@@ -70,6 +71,7 @@
             // 
             // EditButton
             // 
+            this.EditButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.EditButton.Enabled = false;
             this.EditButton.Location = new System.Drawing.Point(174, 406);
             this.EditButton.Name = "EditButton";

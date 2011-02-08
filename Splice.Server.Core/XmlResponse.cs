@@ -143,29 +143,25 @@ namespace Splice.Server
             return resp;
         }
 
-        public static XmlResponse Continue()
+        public static XmlResponse OK()
         {
-            XmlResponse resp = new XmlResponse();
-            resp._contentType = "text/html";
-            resp._statusCode = HttpStatusCode.Continue;
+            return OK("Operation completed successfully.");
+        }
 
-            XmlDocument xml = new XmlDocument();
-            XmlElement html = xml.CreateElement("html");
-            xml.AppendChild(html);
-            XmlElement head = xml.CreateElement("head");
-            XmlElement title = xml.CreateElement("title");
-            title.InnerText = "Continue";
-            head.AppendChild(title);
-            XmlElement body = xml.CreateElement("body");
-            XmlElement h1 = xml.CreateElement("h1");
-            h1.InnerText = "Continue";
-            body.AppendChild(h1);
+        public static XmlResponse OK(String Message)
+        {
+            XmlResponse Response = new XmlResponse();
+            Response._contentType = "application/xml";
+            Response._statusCode = HttpStatusCode.OK;
 
-            html.AppendChild(head);
-            html.AppendChild(body);
+            XmlDocument Xml = new XmlDocument();
+            XmlElement ResponseElement = Xml.CreateElement("Response");
+            Xml.AppendChild(ResponseElement);
+            XmlElement MessageElement = Xml.CreateElement("Message");
+            MessageElement.InnerText = Message;
 
-            resp.XmlDoc = xml;
-            return resp;
+            Response.XmlDoc = Xml;
+            return Response;
         }
     }
 }
