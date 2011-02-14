@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Splice.Configuration")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Edelman")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Splice.Configuration")]
-[assembly: AssemblyCopyright("Copyright © Edelman 2010")]
+[assembly: AssemblyCopyright("Copyright © Seb Pollard 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

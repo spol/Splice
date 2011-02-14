@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WinPlexServerLib")]
+[assembly: AssemblyTitle("Splice Server Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Edelman")]
-[assembly: AssemblyProduct("WinPlexServerLib")]
-[assembly: AssemblyCopyright("Copyright © Edelman 2010")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Splice Server Core")]
+[assembly: AssemblyCopyright("Copyright © Seb Pollard 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

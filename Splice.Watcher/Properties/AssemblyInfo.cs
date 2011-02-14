@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SpliceWatcher")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Edelman")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SpliceWatcher")]
-[assembly: AssemblyCopyright("Copyright © Edelman 2010")]
+[assembly: AssemblyCopyright("Copyright © Seb Pollard 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
